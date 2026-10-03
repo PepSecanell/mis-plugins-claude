@@ -4,7 +4,7 @@ Sign-in required: NO (the app has no accounts).
 
 ---
 
-Agents is a free chat app for your own team of AI agents. It has no accounts, no in-app purchases and no server of ours: it calls AI providers directly with an API key the user supplies from their own provider account (bring-your-own-key). The user pays their provider directly. We do not sell anything, and the app does not link to any purchase.
+Agent Teams is a free chat app for your own team of AI agents. It has no accounts, no in-app purchases and no server of ours: it calls AI providers directly with an API key the user supplies from their own provider account (bring-your-own-key). The user pays their provider directly. We do not sell anything, and the app does not link to any purchase.
 
 HOW TO TEST
 1. Open the app and tap the gear (Settings) › Anthropic (Claude).

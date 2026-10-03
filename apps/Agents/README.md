@@ -1,6 +1,8 @@
-# Agents
+# Agent Teams
 
-A native iPhone + Mac app for your own team of AI agents, modelled on xAI's **Grok Bot**. It runs on Claude.
+> App Store name: **Agent Teams**. The Xcode project, target and bundle id (`com.keoly.agents`) keep the internal name "Agents".
+
+A native iPhone + Mac app for your own team of AI agents, modelled on xAI's **Grok Bot**. It runs on your own key from Anthropic, OpenAI, Google Gemini, xAI, OpenRouter, Mistral, DeepSeek or Groq.
 
 - **Agents (bots):** each has a name, emoji avatar, color, label (Health, YouTube…), specialty and its own instructions. Create as many as you want. **Write with AI** drafts the instructions from one sentence.
 - **Main agent:** your chief of staff (by default **Don't Die**). It leads group chats and coordinates the specialists.

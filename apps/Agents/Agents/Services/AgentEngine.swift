@@ -510,7 +510,7 @@ final class AgentEngine {
         let instructions = agent.instructions.trimmingCharacters(in: .whitespacesAndNewlines)
         parts.append(instructions.isEmpty ? "You are \(agent.name), a helpful specialist agent." : instructions)
 
-        var howYouWork = "# How you work\nYou are \"\(agent.name)\", one of the user's personal AI agents in the Agents app."
+        var howYouWork = "# How you work\nYou are \"\(agent.name)\", one of the user's personal AI agents in the Agent Teams app."
         if agent.isMain {
             howYouWork += " You are the MAIN agent, the user's chief of staff: coordinate the team, consult specialists (several at once when useful) and merge their input into one clear answer or plan."
             howYouWork += """

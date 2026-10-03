@@ -1,4 +1,4 @@
-# Agents: App Store Connect listing
+# Agent Teams: App Store Connect listing
 
 Bundle ID `com.keoly.agents` · Team 2KTZ966L7U · Platforms: iOS (iPhone + iPad) and macOS, one universal purchase
 Prepared 2026-10-03. Version 1.0 (build 1).
@@ -7,7 +7,7 @@ Prepared 2026-10-03. Version 1.0 (build 1).
 
 | Field | Value |
 |---|---|
-| Name (30 max) | Agents – AI Team |
+| Name (30 max) | Agent Teams |
 | Subtitle (30 max) | Your own team of AI agents |
 | Primary category | Productivity |
 | Secondary category | Utilities |
@@ -25,7 +25,7 @@ Chat with Chief, your main agent, and it builds you a team of specialist AI agen
 
 ## Description
 
-Agents gives you your own team of AI agents on iPhone, iPad and Mac.
+Agent Teams gives you your own team of AI agents on iPhone, iPad and Mac.
 
 Start by talking to Chief, your main agent. Tell it what you want help with, like your health, your studies, your business or a side project. Chief asks a few questions, proposes a team of specialists, and creates them for you. Each agent has its own instructions, personality and model, and you can change any of it by asking Chief or by editing the agent yourself.
 
@@ -53,7 +53,7 @@ PRIVATE BY DESIGN
 • Your messages go straight from your device to the AI provider you chose, never through the developer's servers
 • The app asks for your permission before sending anything to a provider
 
-Answers come from AI and can be wrong. Agents is not a substitute for professional medical, legal or financial advice.
+Answers come from AI and can be wrong. Agent Teams is not a substitute for professional medical, legal or financial advice.
 
 ## Keywords (100 max, comma separated)
 

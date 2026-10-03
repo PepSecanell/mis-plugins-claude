@@ -1,4 +1,4 @@
-# Agents: App Privacy answers (App Store Connect › App Privacy)
+# Agent Teams: App Privacy answers (App Store Connect › App Privacy)
 
 Prepared 2026-10-03, matching the 1.0 code.
 

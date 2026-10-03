@@ -17,7 +17,7 @@ struct OpenAICompatClient {
         request.setValue("application/json", forHTTPHeaderField: "content-type")
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         if provider == .openrouter {
-            request.setValue("Agents", forHTTPHeaderField: "X-Title")
+            request.setValue("Agent Teams", forHTTPHeaderField: "X-Title")
         }
         request.httpBody = try JSONSerialization.data(withJSONObject: Self.translate(body))
 

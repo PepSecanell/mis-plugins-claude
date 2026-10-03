@@ -54,7 +54,7 @@ target.build_configurations.each do |config|
   s['ENABLE_PREVIEWS'] = 'YES'
   s['GENERATE_INFOPLIST_FILE'] = 'YES'
   s['INFOPLIST_FILE'] = 'Agents/Info.plist'
-  s['INFOPLIST_KEY_CFBundleDisplayName'] = 'Agents'
+  s['INFOPLIST_KEY_CFBundleDisplayName'] = 'Agent Teams'
   s['INFOPLIST_KEY_LSApplicationCategoryType'] = 'public.app-category.productivity'
   # Only HTTPS to AI providers: exempt from export-compliance paperwork.
   s['INFOPLIST_KEY_ITSAppUsesNonExemptEncryption'] = 'NO'

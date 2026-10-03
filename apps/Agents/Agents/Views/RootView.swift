@@ -123,7 +123,7 @@ struct HomeView: View {
                 }
             }
         }
-        .navigationTitle("Agents")
+        .navigationTitle("Agent Teams")
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu {

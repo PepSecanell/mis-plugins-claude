@@ -1,4 +1,4 @@
-# Static legal/support pages for the Agents app (iPhone + Mac).
+# Static legal/support pages for the Agent Teams app (iPhone + Mac).
 # Deploy: cd site && npx wrangler deploy
 name = "agents-site"
 compatibility_date = "2026-09-01"
