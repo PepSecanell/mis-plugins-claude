@@ -17,7 +17,8 @@ struct AgentEditorView: View {
     @State private var team = "General"
     @State private var tagline = ""
     @State private var instructions = ""
-    @State private var model = ModelCatalog.defaultModel
+    @State private var provider = Provider.configured.first ?? .anthropic
+    @State private var model = ProviderSettings.defaultModel(for: Provider.configured.first ?? .anthropic)
     @State private var effort = "medium"
     @State private var webSearch = false
     @State private var canConsult = true
@@ -29,6 +30,15 @@ struct AgentEditorView: View {
     @State private var confirmDelete = false
 
     private var isNew: Bool { agent == nil }
+    /// Providers with a key, plus the agent's current one so an existing choice is never hidden.
+    private var providerChoices: [Provider] {
+        Provider.allCases.filter { Keychain.key(for: $0) != nil || $0 == provider }
+    }
+    private var modelChoices: [String] {
+        var list = ProviderSettings.models(for: provider)
+        if !model.isEmpty && !list.contains(model) { list.insert(model, at: 0) }
+        return list
+    }
     private var teams: [String] {
         Array(Set(allAgents.map(\.team) + ["Health", "YouTube", "General"])).sorted()
     }
@@ -93,7 +103,7 @@ struct AgentEditorView: View {
                 } header: {
                     Text("Quick start")
                 } footer: {
-                    Text("Describe the agent in a sentence and Claude writes its tagline and instructions. You can edit them after.")
+                    Text("Describe the agent in a sentence and AI writes its tagline and instructions. You can edit them after.")
                 }
 
                 Section {
@@ -112,27 +122,52 @@ struct AgentEditorView: View {
                 }
 
                 Section {
-                    Picker("Model", selection: $model) {
-                        ForEach(ModelCatalog.options) { option in
-                            VStack(alignment: .leading) {
-                                Text(option.label)
-                                Text(option.detail).font(.caption).foregroundStyle(.secondary)
-                            }
-                            .tag(option.id)
+                    Picker("AI provider", selection: $provider) {
+                        ForEach(providerChoices) { Text($0.name).tag($0) }
+                    }
+                    .onChange(of: provider) { _, value in
+                        if !ProviderSettings.models(for: value).contains(model) {
+                            model = ProviderSettings.defaultModel(for: value)
                         }
                     }
-                    if ModelCatalog.supportsAdaptiveThinking(model) {
+                    if Keychain.key(for: provider) == nil {
+                        Text("No \(provider.name) key yet. Add one in Settings, or pick another provider.")
+                            .font(.footnote).foregroundStyle(.orange)
+                    }
+                    if provider == .anthropic {
+                        Picker("Model", selection: $model) {
+                            ForEach(ModelCatalog.options) { option in
+                                VStack(alignment: .leading) {
+                                    Text(option.label)
+                                    Text(option.detail).font(.caption).foregroundStyle(.secondary)
+                                }
+                                .tag(option.id)
+                            }
+                        }
+                    } else if modelChoices.isEmpty {
+                        TextField("Model id", text: $model)
+                            .autocorrectionDisabled()
+                    } else {
+                        Picker("Model", selection: $model) {
+                            ForEach(modelChoices, id: \.self) { Text($0).tag($0) }
+                        }
+                    }
+                    if provider == .anthropic && ModelCatalog.supportsAdaptiveThinking(model) {
                         Picker("Thinking effort", selection: $effort) {
                             ForEach(ModelCatalog.efforts, id: \.self) { Text($0.capitalized).tag($0) }
                         }
                     }
-                    Toggle("Web search", isOn: $webSearch)
+                    if provider.supportsWebSearch {
+                        Toggle("Web search", isOn: $webSearch)
+                    }
                     Toggle("Can consult other agents", isOn: $canConsult)
                     Toggle("Main agent", isOn: $isMain)
                 } header: {
                     Text("Abilities")
                 } footer: {
-                    Text("Higher effort thinks longer: better answers, slower and more expensive. Web search costs about $0.01 per search. The main agent leads group chats and coordinates the team.")
+                    Text(provider == .anthropic
+                         ? "Higher effort thinks longer: better answers, slower and more expensive. Web search costs about $0.01 per search. The main agent leads group chats, coordinates the team and can create agents for you."
+                         : "The main agent leads group chats, coordinates the team and can create agents for you. Web search and thinking effort are available on Anthropic models.")
                 }
 
                 if !isNew {
@@ -175,6 +210,7 @@ struct AgentEditorView: View {
         team = agent.team
         tagline = agent.tagline
         instructions = agent.instructions
+        provider = agent.providerKind
         model = agent.model
         effort = agent.effort
         webSearch = agent.webSearch
@@ -187,7 +223,8 @@ struct AgentEditorView: View {
         draftError = nil
         defer { drafting = false }
         do {
-            let result = try await engine.draftAgent(name: name.isEmpty ? "Agent" : name, description: aiDescription)
+            let result = try await engine.draftAgent(name: name.isEmpty ? "Agent" : name, description: aiDescription,
+                                                     provider: provider, model: model)
             if !result.tagline.isEmpty { tagline = result.tagline }
             instructions = result.instructions
         } catch {
@@ -210,9 +247,10 @@ struct AgentEditorView: View {
         target.team = team.trimmingCharacters(in: .whitespaces).isEmpty ? "General" : team
         target.tagline = tagline
         target.instructions = instructions
-        target.model = model
+        target.provider = provider.rawValue
+        target.model = model.trimmingCharacters(in: .whitespaces)
         target.effort = effort
-        target.webSearch = webSearch
+        target.webSearch = webSearch && provider.supportsWebSearch
         target.canConsult = canConsult
         if isMain {
             for other in allAgents where other.id != target.id { other.isMain = false }

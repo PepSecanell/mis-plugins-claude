@@ -1,0 +1,11 @@
+# Static legal/support pages for the Agents app (iPhone + Mac).
+# Deploy: cd site && npx wrangler deploy
+name = "agents-site"
+compatibility_date = "2026-09-01"
+main = "worker.js"
+routes = [{ pattern = "agents.keak.app", custom_domain = true }]
+
+[assets]
+binding = "ASSETS"
+directory = "./public"
+html_handling = "none"

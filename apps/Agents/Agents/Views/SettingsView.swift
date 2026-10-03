@@ -5,28 +5,32 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     @Query private var agents: [Agent]
-    @State private var apiKey = ""
-    @State private var savedKey = false
     @State private var confirmRestore = false
+    /// Bumped when a key changes so the provider list re-reads the Keychain.
+    @State private var refresh = 0
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    SecureField("sk-ant-…", text: $apiKey)
-                        .textContentType(.password)
-                        .autocorrectionDisabled()
-                    Button(savedKey ? "Saved ✓" : "Save key") {
-                        Keychain.apiKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-                        savedKey = true
+                    ForEach(Provider.allCases) { provider in
+                        NavigationLink {
+                            ProviderKeyView(provider: provider) { refresh += 1 }
+                        } label: {
+                            HStack {
+                                Text(provider.name)
+                                Spacer()
+                                if Keychain.key(for: provider) != nil {
+                                    Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
+                                }
+                            }
+                        }
                     }
-                    .disabled(apiKey.trimmingCharacters(in: .whitespaces).isEmpty)
-                    Link("Get an API key at console.anthropic.com",
-                         destination: URL(string: "https://console.anthropic.com/settings/keys")!)
+                    .id(refresh)
                 } header: {
-                    Text("Anthropic API key")
+                    Text("AI providers")
                 } footer: {
-                    Text("Stored in your Keychain and synced to your other Apple devices with iCloud Keychain. You pay Anthropic directly for what the agents use.")
+                    Text("Add an API key from any of these. Each agent can run on any provider you've added. Keys stay in your Keychain and sync to your other devices with iCloud Keychain. You pay the provider directly.")
                 }
 
                 Section {
@@ -40,9 +44,9 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Button("Restore starter agents") { confirmRestore = true }
+                    Button("Restore built-in agents") { confirmRestore = true }
                 } footer: {
-                    Text("Adds back any of the built-in agents (Don't Die, Nutrition, Workouts, Daily Coach, YouTube Scout) you deleted.")
+                    Text("Adds back any built-in agent you deleted, like \(SeedData.starterAgents().map(\.name).joined(separator: ", ")).")
                 }
             }
             .formStyle(.grouped)
@@ -50,16 +54,12 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
             }
-            .confirmationDialog("Restore starter agents?", isPresented: $confirmRestore) {
+            .confirmationDialog("Restore built-in agents?", isPresented: $confirmRestore) {
                 Button("Restore") { restoreStarters() }
             }
-            .onAppear {
-                apiKey = Keychain.apiKey ?? ""
-            }
-            .onChange(of: apiKey) { savedKey = false }
         }
         #if os(macOS)
-        .frame(minWidth: 460, minHeight: 440)
+        .frame(minWidth: 460, minHeight: 520)
         #endif
     }
 
@@ -67,7 +67,150 @@ struct SettingsView: View {
         let existing = Set(agents.map(\.seedKey))
         for agent in SeedData.starterAgents() where !existing.contains(agent.seedKey) {
             if agent.isMain && agents.contains(where: \.isMain) { agent.isMain = false }
+            if Keychain.key(for: agent.providerKind) == nil, let provider = Provider.configured.first {
+                agent.provider = provider.rawValue
+                agent.model = ProviderSettings.defaultModel(for: provider)
+            }
             context.insert(agent)
+        }
+        try? context.save()
+    }
+}
+
+/// Add, check and remove one provider's API key, and pick its default model.
+struct ProviderKeyView: View {
+    let provider: Provider
+    var onChange: () -> Void = {}
+
+    @Environment(\.modelContext) private var context
+    @Query private var agents: [Agent]
+    @State private var key = ""
+    @State private var hasKey = false
+    @State private var checking = false
+    @State private var error: String?
+    @State private var models: [String] = []
+    @State private var defaultModel = ""
+    @State private var askConsent = false
+
+    var body: some View {
+        Form {
+            Section {
+                SecureField(provider.keyPlaceholder, text: $key)
+                    .textContentType(.password)
+                    .autocorrectionDisabled()
+                Button {
+                    if ProviderSettings.hasConsent(provider) {
+                        Task { await saveKey() }
+                    } else {
+                        askConsent = true
+                    }
+                } label: {
+                    if checking {
+                        HStack { ProgressView(); Text("Checking…") }
+                    } else {
+                        Text(hasKey ? "Update key" : "Save key")
+                    }
+                }
+                .disabled(checking || key.trimmingCharacters(in: .whitespaces).isEmpty)
+                if let error {
+                    Text(error).font(.footnote).foregroundStyle(.red)
+                }
+                Link("Get a key from \(provider.shortName)", destination: provider.keyPage)
+            } header: {
+                Text("\(provider.name) API key")
+            } footer: {
+                Text(ProviderSettings.consentText(for: provider))
+            }
+
+            if hasKey {
+                Section {
+                    if models.isEmpty {
+                        Text("No models found for this key.").foregroundStyle(.secondary)
+                    } else {
+                        Picker("Default model", selection: $defaultModel) {
+                            ForEach(models, id: \.self) { Text(ModelCatalog.label(for: $0)).tag($0) }
+                        }
+                        .onChange(of: defaultModel) { _, value in
+                            ProviderSettings.setDefaultModel(value, for: provider)
+                        }
+                    }
+                    Button("Refresh model list") { Task { await refreshModels() } }
+                } footer: {
+                    Text("New agents on \(provider.shortName) use this model. You can change it per agent.")
+                }
+
+                Section {
+                    Button("Remove key", role: .destructive) {
+                        Keychain.setKey(nil, for: provider)
+                        hasKey = false
+                        key = ""
+                        onChange()
+                    }
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .navigationTitle(provider.name)
+        .alert("Send your chats to \(provider.name)?", isPresented: $askConsent) {
+            Button("Allow") {
+                ProviderSettings.setConsent(true, for: provider)
+                Task { await saveKey() }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text(ProviderSettings.consentText(for: provider))
+        }
+        .onAppear(perform: load)
+    }
+
+    private func load() {
+        let saved = Keychain.key(for: provider)
+        hasKey = saved != nil
+        key = saved ?? ""
+        models = ProviderSettings.models(for: provider)
+        defaultModel = ProviderSettings.defaultModel(for: provider)
+    }
+
+    /// Checks the key by listing its models, then saves it. A rejected key is never stored.
+    private func saveKey() async {
+        let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines)
+        checking = true
+        error = nil
+        defer { checking = false }
+        do {
+            let fetched = try await ProviderSettings.fetchModels(for: provider, apiKey: trimmed)
+            let isFirstKey = Provider.configured.isEmpty
+            Keychain.setKey(trimmed, for: provider)
+            if provider != .anthropic { ProviderSettings.setModels(fetched, for: provider) }
+            hasKey = true
+            models = ProviderSettings.models(for: provider)
+            if !models.contains(defaultModel) { defaultModel = models.first ?? "" }
+            ProviderSettings.setDefaultModel(defaultModel, for: provider)
+            if isFirstKey { moveAgentsWithoutKeys() }
+            onChange()
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    private func refreshModels() async {
+        guard let saved = Keychain.key(for: provider) else { return }
+        do {
+            let fetched = try await ProviderSettings.fetchModels(for: provider, apiKey: saved)
+            if provider != .anthropic { ProviderSettings.setModels(fetched, for: provider) }
+            models = ProviderSettings.models(for: provider)
+            if !models.contains(defaultModel) { defaultModel = models.first ?? "" }
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    /// With the very first key, agents set to a provider the user has no key for move to this one,
+    /// so the main agent works right away whichever provider they picked.
+    private func moveAgentsWithoutKeys() {
+        for agent in agents where Keychain.key(for: agent.providerKind) == nil {
+            agent.provider = provider.rawValue
+            agent.model = defaultModel
         }
         try? context.save()
     }

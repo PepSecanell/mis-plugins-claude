@@ -9,6 +9,16 @@ struct AgentsApp: App {
     init() {
         let schema = Schema([Agent.self, Conversation.self, ChatMessage.self, MemoryItem.self])
         let container: ModelContainer
+        #if DEBUG
+        if DemoContent.isEnabled {
+            // Screenshot mode: throwaway in-memory store, never touches the real data or iCloud.
+            container = try! ModelContainer(for: schema, configurations: ModelConfiguration(
+                schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+            self.container = container
+            _engine = State(initialValue: AgentEngine(context: container.mainContext))
+            return
+        }
+        #endif
         do {
             // Syncs agents, chats and memory through your private iCloud database.
             container = try ModelContainer(for: schema,
@@ -26,7 +36,12 @@ struct AgentsApp: App {
         WindowGroup {
             RootView()
                 .environment(engine)
-                .task { @MainActor in SeedData.prepare(container.mainContext) }
+                .task { @MainActor in
+                    #if DEBUG
+                    if DemoContent.isEnabled { DemoContent.load(into: container.mainContext); return }
+                    #endif
+                    SeedData.prepare(container.mainContext)
+                }
         }
         .modelContainer(container)
         #if os(macOS)

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support · Agents</title>
+<meta name="description" content="Help and support for the Agents app for iPhone, iPad and Mac by Pep Secanell.">
+<style>
+  :root { --ground:#F6F5FA; --ink:#16131F; --muted:#5B5868; --accent:#5B45B8; --line:#DEDAEA; --card:#FFFFFF; }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; background:var(--ground); color:var(--ink);
+         font:17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:36px 22px 72px; }
+  header p { color:var(--muted); margin:4px 0 0; }
+  h1 { font-size:2rem; line-height:1.2; margin:0; letter-spacing:-0.01em; }
+  h2 { font-size:1.2rem; margin:40px 0 8px; }
+  p, li { margin:0 0 12px; }
+  ul { padding-left:1.2em; margin:0 0 12px; }
+  a { color:var(--accent); text-underline-offset:2px; }
+  .summary { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin:28px 0 8px; }
+  .summary ul:last-child { margin-bottom:0; }
+  footer { margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:0.9rem; }
+  footer a { margin-right:14px; }
+  .topbar { max-width:720px; margin:0 auto; padding:18px 22px 0; display:flex; align-items:center; justify-content:space-between; }
+  .topbar a.home { color:var(--ink); text-decoration:none; font-weight:600; font-size:1.1rem; }
+  .topbar a.back { color:var(--muted); font-size:.95rem; text-decoration:none; }
+  a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  @media (prefers-color-scheme: dark) { :root { --ground:#100E17; --ink:#ECEAF3; --muted:#A9A5B8; --accent:#A996F2; --line:#2B2838; --card:#1A1724; } }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="home" href="/">🧭 Agents</a>
+  <a class="back" href="/">Home</a>
+</header>
+<main>
+  <header>
+    <h1>Support</h1>
+    <p>Agents for iPhone, iPad and Mac</p>
+  </header>
+
+  <div class="summary">
+    <p><strong>Need help?</strong> Email <a href="mailto:keoly.app@gmail.com?subject=Agents%20support">keoly.app@gmail.com</a>. I usually reply within two days.</p>
+  </div>
+
+  <h2>Getting started</h2>
+  <ul>
+    <li>Open <strong>Settings</strong> (the gear) and pick an AI provider: Anthropic, OpenAI, Google Gemini, xAI, OpenRouter, Mistral, DeepSeek or Groq.</li>
+    <li>Paste your API key from that provider's website and tap <strong>Save key</strong>. The app checks the key and loads the models it can use.</li>
+    <li>Open the chat with <strong>Chief</strong>, your main agent. Tell it what you want help with, and ask it to build you a team of agents.</li>
+  </ul>
+
+  <h2>Common questions</h2>
+  <p><strong>"Your API key was rejected."</strong> Copy the key again from the provider's website, without spaces. Some providers need billing set up before a key works.</p>
+  <p><strong>"Rate limited" or "out of credit".</strong> Your provider account has hit a limit or has no balance. Check your usage on the provider's website.</p>
+  <p><strong>An agent says it needs a key.</strong> Each agent runs on one provider. Open the agent (tap its name in the chat, then the info button) and switch it to a provider you've added a key for.</p>
+  <p><strong>How much does it cost?</strong> The app is free. You pay your AI provider directly, usually a fraction of a cent to a few cents per message depending on the model.</p>
+  <p><strong>Copy, reply or retry a message.</strong> Long-press a message on iPhone or iPad, or right-click it on Mac.</p>
+  <p><strong>My chats aren't syncing.</strong> Make sure you're signed in to the same iCloud account on each device and that iCloud Drive is on. Sync can take a minute.</p>
+  <p><strong>Delete everything.</strong> See <a href="/privacy.html">the privacy policy</a> for how to remove keys, chats and iCloud data.</p>
+
+  <footer>
+    <a href="/privacy.html">Privacy Policy</a><a href="/support.html">Support</a><a href="mailto:keoly.app@gmail.com">keoly.app@gmail.com</a>
+    <p>Agents · © 2026 Pep Secanell</p>
+  </footer>
+</main>
+</body>
+</html>

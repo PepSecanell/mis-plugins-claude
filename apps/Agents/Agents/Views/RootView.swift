@@ -21,6 +21,14 @@ struct RootView: View {
                                        description: Text("Talk to one agent, or to the whole team in a group chat."))
             }
         }
+        #if DEBUG
+        .task {
+            // Screenshot mode: open the chat named by `-demoOpen`.
+            guard DemoContent.isEnabled, let title = UserDefaults.standard.string(forKey: "demoOpen") else { return }
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            selection = try? context.fetch(FetchDescriptor<Conversation>()).first { $0.title == title }
+        }
+        #endif
     }
 }
 
@@ -181,7 +189,11 @@ struct ConversationRow: View {
         guard let last = conversation.lastMessage else {
             return conversation.isGroup ? "\(members.count) agents" : (members.first?.tagline ?? "")
         }
-        let text = last.text.replacingOccurrences(of: "\n", with: " ")
+        // Plain text for the one-line preview: drop markdown markers like **bold** and # headings.
+        let plain = (try? AttributedString(markdown: last.text,
+                                           options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace)))
+            .map { String($0.characters) } ?? last.text
+        let text = plain.replacingOccurrences(of: "\n", with: " ")
         switch last.messageKind {
         case .user:
             return "You: " + text

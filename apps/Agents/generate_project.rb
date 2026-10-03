@@ -56,6 +56,8 @@ target.build_configurations.each do |config|
   s['INFOPLIST_FILE'] = 'Agents/Info.plist'
   s['INFOPLIST_KEY_CFBundleDisplayName'] = 'Agents'
   s['INFOPLIST_KEY_LSApplicationCategoryType'] = 'public.app-category.productivity'
+  # Only HTTPS to AI providers: exempt from export-compliance paperwork.
+  s['INFOPLIST_KEY_ITSAppUsesNonExemptEncryption'] = 'NO'
   s['INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphone*]'] = 'YES'
   s['INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]'] = 'YES'
   s['INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone'] = 'UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight'

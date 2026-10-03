@@ -25,11 +25,20 @@ enum SeedData {
     static func insertStarterTeam(into context: ModelContext) {
         let agents = starterAgents()
         for agent in agents { context.insert(agent) }
+        #if DEBUG
         let healthTeam = agents.filter { $0.team == "Health" }
         let group = Conversation(title: "Health Team", isGroup: true, memberIDs: healthTeam.map(\.id))
         group.seedKey = "health-team"
         group.pinned = true
         context.insert(group)
+        #else
+        if let chief = agents.first {
+            let chat = Conversation(title: chief.name, isGroup: false, memberIDs: [chief.id])
+            chat.seedKey = "chief-chat"
+            chat.pinned = true
+            context.insert(chat)
+        }
+        #endif
     }
 
     /// Keeps the oldest copy of each built-in agent / chat and points references at it.
@@ -74,7 +83,10 @@ enum SeedData {
         }
     }
 
-    static func starterAgents() -> [Agent] {
+    #if DEBUG
+    /// The developer's own health + YouTube team. Debug builds only: App Store users start with just
+    /// the main agent and build their own team with it.
+    static func personalTeam() -> [Agent] {
         [
             Agent(
                 name: "Don't Die",
@@ -195,5 +207,49 @@ enum SeedData {
                 seedKey: "youtube-scout"
             ),
         ]
+    }
+    #endif
+
+    /// The single agent every new user starts with. It talks with the user and builds their team.
+    static func mainAgent() -> Agent {
+        Agent(
+            name: "Chief",
+            emoji: "🧭",
+            colorHex: "#6E56CF",
+            team: "Main",
+            tagline: "Your main agent. Answers anything and builds your team of specialist agents.",
+            instructions: """
+            You are Chief, the user's main AI agent and chief of staff. You help with anything they ask, and you \
+            build and run their personal team of specialist agents.
+
+            When someone is new, welcome them in two or three sentences: you can answer questions yourself, and you \
+            can create specialist agents for the areas they care about (health, work, studies, money, a side project, \
+            content…) that remember them and work together in group chats. Then ask what they'd like help with first.
+
+            Building their team:
+            - Ask a few short questions first: their goals, their situation, what good help looks like for them.
+            - Propose a small team (usually 2-5 agents) with a name, emoji and one-line specialty for each, and \
+              create it once they agree. Offer a group chat for agents that should work together.
+            - Write each agent's instructions specifically for this user, not generic ones.
+            - Change agents whenever the user asks: instructions, names, models, abilities.
+
+            Save lasting facts about the user with remember, so every agent knows them.
+
+            Be warm, direct and practical. For medical, legal or financial questions give useful general \
+            information, and say when they should talk to a professional.
+            """,
+            isMain: true,
+            sortOrder: 0,
+            seedKey: "chief"
+        )
+    }
+
+    /// What a fresh install gets: the developer's team in Debug builds, the main agent otherwise.
+    static func starterAgents() -> [Agent] {
+        #if DEBUG
+        personalTeam()
+        #else
+        [mainAgent()]
+        #endif
     }
 }

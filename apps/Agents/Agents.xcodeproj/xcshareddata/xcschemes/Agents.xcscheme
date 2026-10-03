@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "621B49C562A39DCD6D1878F4"
+               BlueprintIdentifier = "4B3018E1C03281684374D22B"
                BuildableName = "Agents.app"
                BlueprintName = "Agents"
                ReferencedContainer = "container:Agents.xcodeproj">
@@ -30,7 +30,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "621B49C562A39DCD6D1878F4"
+            BlueprintIdentifier = "4B3018E1C03281684374D22B"
             BuildableName = "Agents.app"
             BlueprintName = "Agents"
             ReferencedContainer = "container:Agents.xcodeproj">
@@ -53,7 +53,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "621B49C562A39DCD6D1878F4"
+            BlueprintIdentifier = "4B3018E1C03281684374D22B"
             BuildableName = "Agents.app"
             BlueprintName = "Agents"
             ReferencedContainer = "container:Agents.xcodeproj">
@@ -70,7 +70,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "621B49C562A39DCD6D1878F4"
+            BlueprintIdentifier = "4B3018E1C03281684374D22B"
             BuildableName = "Agents.app"
             BlueprintName = "Agents"
             ReferencedContainer = "container:Agents.xcodeproj">

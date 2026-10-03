@@ -14,7 +14,7 @@ final class AgentEngine {
     /// Short live status per message, e.g. "Searching the web…".
     private(set) var status: [UUID: String] = [:]
 
-    private let context: ModelContext
+    let context: ModelContext
     @ObservationIgnored private var tasks: [UUID: Task<Void, Never>] = [:]
 
     /// How deep agents may consult each other (main → specialist → specialist).
@@ -47,6 +47,34 @@ final class AgentEngine {
         }
     }
 
+    /// Throws away everything after the last user message and asks again.
+    func regenerate(in conversation: Conversation) {
+        guard !isBusy(conversation),
+              let lastUser = conversation.sortedMessages.last(where: { $0.messageKind == .user }) else { return }
+        for message in conversation.sortedMessages where message.createdAt > lastUser.createdAt {
+            context.delete(message)
+        }
+        save()
+        let id = conversation.id
+        let text = lastUser.text
+        busyConversations.insert(id)
+        tasks[id] = Task { [weak self] in
+            await self?.respond(to: text, in: conversation)
+            self?.busyConversations.remove(id)
+            self?.tasks[id] = nil
+            self?.save()
+        }
+    }
+
+    /// Deletes one message, plus the private consult cards that belong to it.
+    func delete(_ message: ChatMessage, in conversation: Conversation) {
+        for card in conversation.messages ?? [] where card.parentID == message.id {
+            context.delete(card)
+        }
+        context.delete(message)
+        save()
+    }
+
     func stop(_ conversation: Conversation) {
         tasks[conversation.id]?.cancel()
     }
@@ -61,10 +89,19 @@ final class AgentEngine {
     }
 
     /// Drafts a tagline and instructions for a new agent from a short description.
-    func draftAgent(name: String, description: String) async throws -> (tagline: String, instructions: String) {
-        guard let apiKey = Keychain.apiKey else {
-            throw ClaudeError(message: "Add your Anthropic API key in Settings first.")
+    /// Runs on the provider and model chosen in the editor, or on the first provider with a key.
+    func draftAgent(name: String, description: String, provider: Provider,
+                    model: String) async throws -> (tagline: String, instructions: String) {
+        var provider = provider
+        var model = model
+        if Keychain.key(for: provider) == nil, let fallback = Provider.configured.first {
+            provider = fallback
+            model = ProviderSettings.defaultModel(for: fallback)
         }
+        guard Keychain.key(for: provider) != nil else {
+            throw ClaudeError(message: "Add an API key in Settings first.")
+        }
+        if model.isEmpty { model = ProviderSettings.defaultModel(for: provider) }
         let prompt = """
         Write the configuration for a personal AI agent called "\(name)".
         What the user wants it to do: \(description)
@@ -75,14 +112,18 @@ final class AgentEngine {
         <the agent's system prompt in second person ("You are…"): its expertise, how it should think, \
         what to ask the user, how to format answers for a phone screen, and any safety limits. 150-350 words.>
         """
-        let body: [String: Any] = [
-            "model": ModelCatalog.defaultModel,
-            "max_tokens": 4000,
-            "thinking": ["type": "adaptive"],
-            "output_config": ["effort": "low"],
+        var body: [String: Any] = [
+            "model": model,
             "messages": [["role": "user", "content": prompt]],
         ]
-        let response = try await ClaudeClient(apiKey: apiKey).stream(body: body) { _ in }
+        if provider == .anthropic {
+            body["max_tokens"] = 4000
+            if ModelCatalog.supportsAdaptiveThinking(model) {
+                body["thinking"] = ["type": "adaptive"]
+                body["output_config"] = ["effort": "low"]
+            }
+        }
+        let response = try await ClientPool().stream(provider: provider, body: body, betas: []) { _ in }
         let text = ClaudeClient.text(of: response.content)
         let parts = text.components(separatedBy: "INSTRUCTIONS:")
         let tagline = parts.first?
@@ -97,11 +138,11 @@ final class AgentEngine {
     // MARK: - Turn orchestration
 
     private func respond(to text: String, in conversation: Conversation) async {
-        guard let apiKey = Keychain.apiKey else {
-            append(ChatMessage(kind: .notice, text: "Add your Anthropic API key in Settings to start chatting."), to: conversation)
+        guard !Provider.configured.isEmpty else {
+            append(ChatMessage(kind: .notice, text: "Add an API key in Settings (⚙️) to start chatting. Any supported AI provider works."), to: conversation)
             return
         }
-        let client = ClaudeClient(apiKey: apiKey)
+        let clients = ClientPool()
         let members = agents(in: conversation)
         guard !members.isEmpty else {
             append(ChatMessage(kind: .notice, text: "This chat has no agents. Add one from the chat's info screen."), to: conversation)
@@ -125,7 +166,7 @@ final class AgentEngine {
         while index < queue.count, !Task.isCancelled {
             let agent = queue[index]
             index += 1
-            let handoffs = await runVisibleTurn(agent: agent, in: conversation, client: client)
+            let handoffs = await runVisibleTurn(agent: agent, in: conversation, clients: clients)
             for next in handoffs where handoffBudget > 0 && !queue[index...].contains(where: { $0.id == next.id }) {
                 queue.append(next)
                 handoffBudget -= 1
@@ -134,7 +175,7 @@ final class AgentEngine {
     }
 
     /// One agent writes one visible reply in the conversation. Returns agents it handed off to.
-    private func runVisibleTurn(agent: Agent, in conversation: Conversation, client: ClaudeClient) async -> [Agent] {
+    private func runVisibleTurn(agent: Agent, in conversation: Conversation, clients: ClientPool) async -> [Agent] {
         let reply = ChatMessage(kind: .agent, agentID: agent.id)
         let history = buildHistory(for: agent, in: conversation)
         append(reply, to: conversation)
@@ -149,7 +190,7 @@ final class AgentEngine {
         let system = systemPrompt(for: agent, conversation: conversation, consultedBy: nil)
         do {
             let result = try await runLoop(agent: agent, system: system, messages: history, depth: 0,
-                                           sink: reply, root: reply, conversation: conversation, client: client)
+                                           sink: reply, root: reply, conversation: conversation, clients: clients)
             return result.handoffs
         } catch {
             guard alive(reply) else { return [] }
@@ -171,7 +212,7 @@ final class AgentEngine {
     /// search results), so the loop stays append-only.
     private func runLoop(agent: Agent, system: String, messages initial: [[String: Any]], depth: Int,
                          sink: ChatMessage, root: ChatMessage, conversation: Conversation,
-                         client: ClaudeClient) async throws -> LoopResult {
+                         clients: ClientPool) async throws -> LoopResult {
         var messages = initial
         var result = LoopResult()
         let tools = toolDefinitions(for: agent, conversation: conversation, depth: depth)
@@ -180,28 +221,31 @@ final class AgentEngine {
         for _ in 0..<maxToolRounds {
             try Task.checkCancellation()
             guard alive(agent), alive(sink), alive(conversation) else { throw CancellationError() }
+            let provider = agent.providerKind
             var body: [String: Any] = [
                 "model": agent.model,
-                "max_tokens": 32000,
                 "system": [["type": "text", "text": system]],
                 "messages": messages,
-                "cache_control": ["type": "ephemeral"],
             ]
             if !tools.isEmpty { body["tools"] = tools }
             var betas: [String] = []
-            if ModelCatalog.supportsAdaptiveThinking(agent.model) {
-                body["thinking"] = ["type": "adaptive", "display": "summarized"]
-                body["output_config"] = ["effort": agent.effort]
-            }
-            if ModelCatalog.supportsFallbacks(agent.model) {
-                // If a safety classifier declines, the API retries on a fallback model server-side.
-                body["fallbacks"] = "default"
-                betas.append("server-side-fallback-2026-07-01")
+            if provider == .anthropic {
+                body["max_tokens"] = 32000
+                body["cache_control"] = ["type": "ephemeral"]
+                if ModelCatalog.supportsAdaptiveThinking(agent.model) {
+                    body["thinking"] = ["type": "adaptive", "display": "summarized"]
+                    body["output_config"] = ["effort": agent.effort]
+                }
+                if ModelCatalog.supportsFallbacks(agent.model) {
+                    // If a safety classifier declines, the API retries on a fallback model server-side.
+                    body["fallbacks"] = "default"
+                    betas.append("server-side-fallback-2026-07-01")
+                }
             }
 
             let sinkID = sink.id
             status[sinkID] = "Thinking…"
-            let response = try await client.stream(body: body, betas: betas) { [weak self] event in
+            let response = try await clients.stream(provider: provider, body: body, betas: betas) { [weak self] event in
                 guard let self, self.alive(sink) else { return }
                 switch event {
                 case .text(let chunk):
@@ -220,6 +264,8 @@ final class AgentEngine {
                         case "ask_agent": self.status[sinkID] = "Consulting teammates…"
                         case "remember", "forget": self.status[sinkID] = "Updating memory…"
                         case "hand_off": self.status[sinkID] = "Handing off…"
+                        case "create_agent", "update_agent", "delete_agent", "create_group_chat", "update_group_chat":
+                            self.status[sinkID] = "Setting up your team…"
                         default: self.status[sinkID] = "Working…"
                         }
                     case "thinking", "redacted_thinking":
@@ -239,7 +285,7 @@ final class AgentEngine {
             case "tool_use":
                 let toolUses = response.content.filter { $0["type"] as? String == "tool_use" }
                 let (results, handoffs) = await runTools(toolUses, agent: agent, invalidIDs: response.invalidToolUseIDs,
-                                                         depth: depth, root: root, conversation: conversation, client: client)
+                                                         depth: depth, root: root, conversation: conversation, clients: clients)
                 result.handoffs.append(contentsOf: handoffs)
                 messages.append(["role": "user", "content": results])
             case "pause_turn":
@@ -324,7 +370,10 @@ final class AgentEngine {
             ],
             "eager_input_streaming": true,
         ])
-        if agent.webSearch {
+        if agent.isMain && depth == 0 {
+            tools.append(contentsOf: TeamTools.definitions)
+        }
+        if agent.webSearch && agent.providerKind.supportsWebSearch {
             tools.append(["type": ModelCatalog.webSearchToolType(agent.model), "name": "web_search", "max_uses": 6])
         }
         return tools
@@ -333,7 +382,7 @@ final class AgentEngine {
     /// Runs the client-side tool calls of one assistant turn. Consults run in parallel.
     private func runTools(_ toolUses: [[String: Any]], agent: Agent, invalidIDs: Set<String>, depth: Int,
                           root: ChatMessage, conversation: Conversation,
-                          client: ClaudeClient) async -> ([[String: Any]], [Agent]) {
+                          clients: ClientPool) async -> ([[String: Any]], [Agent]) {
         var outputs = [(text: String, isError: Bool)](repeating: ("", false), count: toolUses.count)
         var handoffs: [Agent] = []
         var consults: [(index: Int, target: String, question: String)] = []
@@ -389,7 +438,8 @@ final class AgentEngine {
                     outputs[i] = ("No memory with id \(wanted).", true)
                 }
             default:
-                outputs[i] = ("Unknown tool \(name).", true)
+                outputs[i] = runTeamTool(name, input: input, agent: agent, conversation: conversation)
+                    ?? ("Unknown tool \(name).", true)
             }
         }
 
@@ -399,7 +449,7 @@ final class AgentEngine {
                     group.addTask { @MainActor in
                         let (text, isError) = await self.consult(asker: agent, targetName: consult.target,
                                                                  question: consult.question, depth: depth,
-                                                                 root: root, conversation: conversation, client: client)
+                                                                 root: root, conversation: conversation, clients: clients)
                         return (consult.index, text, isError)
                     }
                 }
@@ -424,7 +474,7 @@ final class AgentEngine {
 
     /// A private agent-to-agent conversation. Shown in the UI as a collapsible card under the reply.
     private func consult(asker: Agent, targetName: String, question: String, depth: Int, root: ChatMessage,
-                         conversation: Conversation, client: ClaudeClient) async -> (String, Bool) {
+                         conversation: Conversation, clients: ClientPool) async -> (String, Bool) {
         let candidates = allAgents().filter { $0.id != asker.id }
         guard let target = Self.match(targetName, in: candidates) else {
             let names = candidates.map(\.name).joined(separator: ", ")
@@ -443,7 +493,7 @@ final class AgentEngine {
         let messages: [[String: Any]] = [["role": "user", "content": "\(asker.name) asks you:\n\n\(question)"]]
         do {
             _ = try await runLoop(agent: target, system: system, messages: messages, depth: depth + 1,
-                                  sink: card, root: root, conversation: conversation, client: client)
+                                  sink: card, root: root, conversation: conversation, clients: clients)
             let answer = card.text.trimmingCharacters(in: .whitespacesAndNewlines)
             return (answer.isEmpty ? "(\(target.name) had nothing to add.)" : "\(target.name) says:\n\n\(answer)", false)
         } catch {
@@ -463,6 +513,15 @@ final class AgentEngine {
         var howYouWork = "# How you work\nYou are \"\(agent.name)\", one of the user's personal AI agents in the Agents app."
         if agent.isMain {
             howYouWork += " You are the MAIN agent, the user's chief of staff: coordinate the team, consult specialists (several at once when useful) and merge their input into one clear answer or plan."
+            howYouWork += """
+            \n\nYou also build and manage the user's team inside the app. With list_agents, create_agent, update_agent, \
+            delete_agent, create_group_chat and update_group_chat you can do everything the app's screens can: \
+            add specialists, rewrite their instructions, change their emoji, color, label, AI provider and model, \
+            and set up group chats. When the user wants help with an area of their life or work, get to know them \
+            first with a few short questions, then propose a small team (usually 2-5 agents) and create it once they \
+            agree. Write each agent's instructions specifically for this user. Ask before deleting anything. \
+            You can't see or change API keys; those live in Settings.
+            """
         }
         howYouWork += "\nToday is \(Date.now.formatted(date: .complete, time: .omitted))."
         parts.append(howYouWork)
@@ -568,7 +627,7 @@ final class AgentEngine {
         return conversation.memberIDs.compactMap { byID[$0] }
     }
 
-    private func append(_ message: ChatMessage, to conversation: Conversation) {
+    func append(_ message: ChatMessage, to conversation: Conversation) {
         guard alive(conversation) else { return }
         context.insert(message)
         if conversation.messages == nil { conversation.messages = [] }
@@ -576,11 +635,11 @@ final class AgentEngine {
         conversation.updatedAt = Date()
     }
 
-    private func save() {
+    func save() {
         try? context.save()
     }
 
-    private static func match(_ name: String, in agents: [Agent]) -> Agent? {
+    static func match(_ name: String, in agents: [Agent]) -> Agent? {
         let wanted = Mentions.normalize(name)
         return agents.first { Mentions.normalize($0.name) == wanted }
             ?? agents.first { Mentions.normalize($0.name).contains(wanted) || wanted.contains(Mentions.normalize($0.name)) }

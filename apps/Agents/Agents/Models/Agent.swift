@@ -14,6 +14,8 @@ final class Agent {
     var tagline: String = ""
     /// The agent's system prompt: personality, expertise and rules.
     var instructions: String = ""
+    /// `Provider.rawValue` of the AI company this agent runs on. Agents from older builds are Anthropic.
+    var provider: String = Provider.anthropic.rawValue
     var model: String = ModelCatalog.defaultModel
     var effort: String = "medium"
     var webSearch: Bool = false

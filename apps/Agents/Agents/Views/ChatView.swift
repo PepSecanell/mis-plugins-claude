@@ -7,6 +7,8 @@ struct ChatView: View {
     @Query(sort: [SortDescriptor(\Agent.sortOrder), SortDescriptor(\Agent.createdAt)]) private var allAgents: [Agent]
     @State private var draft = ""
     @State private var showInfo = false
+    @State private var replyingTo: ChatMessage?
+    @State private var selecting: ChatMessage?
     @FocusState private var inputFocused: Bool
 
     private var members: [Agent] {
@@ -45,7 +47,8 @@ struct ChatView: View {
                         MessageRow(message: message,
                                    agents: allAgents,
                                    consults: consultsByParent[message.id] ?? [],
-                                   showName: conversation.isGroup)
+                                   showName: conversation.isGroup,
+                                   actions: actions(for: message))
                             .id(message.id)
                     }
                     Color.clear.frame(height: 1).id("bottom")
@@ -60,12 +63,20 @@ struct ChatView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            InputBar(draft: $draft,
+            VStack(spacing: 0) {
+                if let replyingTo {
+                    ReplyPreview(author: author(of: replyingTo), text: replyingTo.text) { self.replyingTo = nil }
+                }
+                InputBar(draft: $draft,
                      members: conversation.isGroup ? members : [],
                      isBusy: engine.isBusy(conversation),
                      focused: $inputFocused,
                      onSend: send,
                      onStop: { engine.stop(conversation) })
+            }
+        }
+        .sheet(item: $selecting) { message in
+            SelectTextView(text: message.text)
         }
         .navigationTitle(title)
         #if os(iOS)
@@ -86,9 +97,111 @@ struct ChatView: View {
     }
 
     private func send() {
-        let text = draft
+        var text = draft
+        if let replyingTo, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let quoted = replyingTo.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            let short = quoted.count > 280 ? String(quoted.prefix(280)) + "…" : quoted
+            let quote = short.split(separator: "\n", omittingEmptySubsequences: false).map { "> \($0)" }.joined(separator: "\n")
+            text = "Replying to \(author(of: replyingTo)):\n\(quote)\n\n\(text)"
+        }
         draft = ""
+        replyingTo = nil
         engine.send(text, in: conversation)
+    }
+
+    private func author(of message: ChatMessage) -> String {
+        if message.messageKind == .user { return "you" }
+        return allAgents.first { $0.id == message.agentID }?.name ?? "Agent"
+    }
+
+    /// The long-press / right-click actions for one message.
+    private func actions(for message: ChatMessage) -> MessageActions {
+        let busy = engine.isBusy(conversation)
+        let lastAgentReply = visibleMessages.last(where: { $0.messageKind == .agent })
+        return MessageActions(
+            reply: { replyingTo = message; inputFocused = true },
+            select: { selecting = message },
+            edit: message.messageKind == .user ? { draft = message.text; inputFocused = true } : nil,
+            retry: (!busy && message.messageKind == .agent && message.id == lastAgentReply?.id)
+                ? { engine.regenerate(in: conversation) } : nil,
+            delete: busy ? nil : { engine.delete(message, in: conversation) }
+        )
+    }
+}
+
+// MARK: - Message actions
+
+/// What the long-press menu on a message can do. nil hides that action.
+struct MessageActions {
+    var reply: () -> Void = {}
+    var select: () -> Void = {}
+    var edit: (() -> Void)?
+    var retry: (() -> Void)?
+    var delete: (() -> Void)?
+}
+
+enum Clipboard {
+    static func copy(_ text: String) {
+        #if os(iOS)
+        UIPasteboard.general.string = text
+        #else
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(text, forType: .string)
+        #endif
+    }
+}
+
+/// The message being replied to, shown above the text field.
+private struct ReplyPreview: View {
+    let author: String
+    let text: String
+    let onCancel: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            RoundedRectangle(cornerRadius: 2).fill(Color.accentColor).frame(width: 3)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Replying to \(author)").font(.caption.weight(.semibold))
+                Text(text).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+            }
+            Spacer()
+            Button(action: onCancel) { Image(systemName: "xmark.circle.fill").foregroundStyle(.secondary) }
+                .buttonStyle(.plain)
+        }
+        .frame(height: 40)
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .background(.bar)
+    }
+}
+
+/// Full message text where any part can be selected and copied.
+private struct SelectTextView: View {
+    let text: String
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                Text(text)
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+            }
+            .navigationTitle("Select Text")
+            #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } }
+                ToolbarItem(placement: .primaryAction) {
+                    Button { Clipboard.copy(text) } label: { Label("Copy All", systemImage: "doc.on.doc") }
+                }
+            }
+        }
+        #if os(macOS)
+        .frame(minWidth: 480, minHeight: 400)
+        #endif
     }
 }
 
@@ -105,11 +218,14 @@ private struct ChatIntro: View {
                     "Plan my meals and workouts for this week"]
         }
         switch members.first?.seedKey {
+        case "chief": return ["Build me a team of agents", "What can you do for me?", "Ask me questions to get to know me"]
+        #if DEBUG
         case "dont-die": return ["Build my Don't Die protocol", "What should I measure first?", "Review my sleep routine"]
         case "nutrition": return ["Plan a full day of fruitarian meals", "Am I missing any nutrients?", "What bloodwork should I get?"]
         case "workouts": return ["Make me a weekly training plan", "A 30-minute workout I can do at home", "How do I improve my VO2 max?"]
         case "daily-coach": return ["What should I do today?", "Design my morning routine", "Help me build an evening wind-down"]
         case "youtube-scout": return ["Find 5 video ideas for my channel", "What's trending in my niche this week?", "Research outlier videos for me"]
+        #endif
         default: return ["What can you help me with?", "Ask me questions to get to know me"]
         }
     }
@@ -155,6 +271,7 @@ struct MessageRow: View {
     let agents: [Agent]
     let consults: [ChatMessage]
     let showName: Bool
+    var actions = MessageActions()
     @Environment(AgentEngine.self) private var engine
 
     private func agent(_ id: UUID?) -> Agent? {
@@ -171,9 +288,15 @@ struct MessageRow: View {
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
                     .background(RoundedRectangle(cornerRadius: 18).fill(Color.accentColor.opacity(0.18)))
+                    #if os(iOS)
+                    .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 18))
+                    #endif
+                    .contextMenu { menu }
             }
         case .agent:
             agentReply
+                .contentShape(Rectangle())
+                .contextMenu { if !engine.streamingMessages.contains(message.id) { menu } }
         case .handoff:
             let from = agent(message.fromAgentID)
             let to = agent(message.agentID)
@@ -189,12 +312,35 @@ struct MessageRow: View {
             .foregroundStyle(.secondary)
             .frame(maxWidth: .infinity)
         case .notice:
-            Label(message.text, systemImage: "exclamationmark.circle")
+            Label(message.text, systemImage: Self.isTeamChange(message.text) ? "sparkles" : "exclamationmark.circle")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity)
         case .consult:
             EmptyView()
+        }
+    }
+
+    private static func isTeamChange(_ text: String) -> Bool {
+        ["Created ", "Updated ", "Deleted "].contains { text.hasPrefix($0) }
+    }
+
+    @ViewBuilder private var menu: some View {
+        if !message.text.isEmpty {
+            Button { Clipboard.copy(message.text) } label: { Label("Copy", systemImage: "doc.on.doc") }
+            Button(action: actions.reply) { Label("Reply", systemImage: "arrowshape.turn.up.left") }
+            ShareLink(item: message.text) { Label("Share", systemImage: "square.and.arrow.up") }
+            Button(action: actions.select) { Label("Select Text", systemImage: "selection.pin.in.out") }
+        }
+        if let edit = actions.edit {
+            Button(action: edit) { Label("Edit and Resend", systemImage: "pencil") }
+        }
+        if let retry = actions.retry {
+            Button(action: retry) { Label("Retry", systemImage: "arrow.clockwise") }
+        }
+        if let delete = actions.delete {
+            Divider()
+            Button(role: .destructive, action: delete) { Label("Delete", systemImage: "trash") }
         }
     }
 
