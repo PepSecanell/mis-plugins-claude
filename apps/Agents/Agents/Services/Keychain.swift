@@ -12,6 +12,12 @@ enum Keychain {
     }
 
     static func key(for provider: Provider) -> String? {
+        #if DEBUG
+        // Test hook for command-line runs of the engine (no Keychain entitlement there).
+        if let key = ProcessInfo.processInfo.environment["AGENTS_TEST_KEY_\(provider.rawValue.uppercased())"], !key.isEmpty {
+            return key
+        }
+        #endif
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,

@@ -9,6 +9,9 @@ struct ChatView: View {
     @State private var showInfo = false
     @State private var replyingTo: ChatMessage?
     @State private var selecting: ChatMessage?
+    /// A provider whose key is here (e.g. synced through iCloud Keychain) but that this device
+    /// hasn't been allowed to send chats to yet.
+    @State private var consentFor: Provider?
     @FocusState private var inputFocused: Bool
 
     private var members: [Agent] {
@@ -40,7 +43,8 @@ struct ChatView: View {
                 LazyVStack(alignment: .leading, spacing: 14) {
                     if visibleMessages.isEmpty {
                         ChatIntro(conversation: conversation, members: members) { suggestion in
-                            engine.send(suggestion, in: conversation)
+                            draft = suggestion
+                            send()
                         }
                     }
                     ForEach(visibleMessages) { message in
@@ -78,6 +82,17 @@ struct ChatView: View {
         .sheet(item: $selecting) { message in
             SelectTextView(text: message.text)
         }
+        .alert("Send your chats to \(consentFor?.name ?? "")?",
+               isPresented: Binding(get: { consentFor != nil }, set: { if !$0 { consentFor = nil } })) {
+            Button("Allow") {
+                if let consentFor { ProviderSettings.setConsent(true, for: consentFor) }
+                consentFor = nil
+                send()
+            }
+            Button("Cancel", role: .cancel) { consentFor = nil }
+        } message: {
+            if let consentFor { Text(ProviderSettings.consentText(for: consentFor)) }
+        }
         .navigationTitle(title)
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
@@ -97,6 +112,10 @@ struct ChatView: View {
     }
 
     private func send() {
+        if let missing = Provider.configured.first(where: { !ProviderSettings.hasConsent($0) }) {
+            consentFor = missing
+            return
+        }
         var text = draft
         if let replyingTo, !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             let quoted = replyingTo.text.trimmingCharacters(in: .whitespacesAndNewlines)

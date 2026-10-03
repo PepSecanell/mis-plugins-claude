@@ -91,6 +91,7 @@ struct ProviderKeyView: View {
     @State private var models: [String] = []
     @State private var defaultModel = ""
     @State private var askConsent = false
+    @State private var movedAll = false
 
     var body: some View {
         Form {
@@ -140,10 +141,26 @@ struct ProviderKeyView: View {
                 }
 
                 Section {
+                    Button("Use \(provider.shortName) for all agents") {
+                        ProviderRouting.moveAll(to: provider, in: context)
+                        movedAll = true
+                    }
+                    .disabled(models.isEmpty && provider != .anthropic)
+                    if movedAll {
+                        Text("All agents now use \(provider.shortName) (\(ModelCatalog.label(for: defaultModel))).")
+                            .font(.footnote).foregroundStyle(.secondary)
+                    }
+                } footer: {
+                    Text("Or change one agent at a time from its settings.")
+                }
+
+                Section {
                     Button("Remove key", role: .destructive) {
                         Keychain.setKey(nil, for: provider)
                         hasKey = false
                         key = ""
+                        // Agents on this provider move to one that still has a key.
+                        Task { await ProviderRouting.repairAll(in: context) }
                         onChange()
                     }
                 }
@@ -161,6 +178,10 @@ struct ProviderKeyView: View {
             Text(ProviderSettings.consentText(for: provider))
         }
         .onAppear(perform: load)
+        .task {
+            // A key synced from another device has no model list on this one yet.
+            if Keychain.key(for: provider) != nil && models.isEmpty && provider != .anthropic { await refreshModels() }
+        }
     }
 
     private func load() {
@@ -179,14 +200,17 @@ struct ProviderKeyView: View {
         defer { checking = false }
         do {
             let fetched = try await ProviderSettings.fetchModels(for: provider, apiKey: trimmed)
-            let isFirstKey = Provider.configured.isEmpty
+            let hadPreferred = ProviderSettings.preferred != nil
             Keychain.setKey(trimmed, for: provider)
             if provider != .anthropic { ProviderSettings.setModels(fetched, for: provider) }
             hasKey = true
             models = ProviderSettings.models(for: provider)
+            if !models.contains(defaultModel) { defaultModel = ProviderSettings.defaultModel(for: provider) }
             if !models.contains(defaultModel) { defaultModel = models.first ?? "" }
             ProviderSettings.setDefaultModel(defaultModel, for: provider)
-            if isFirstKey { moveAgentsWithoutKeys() }
+            if !hadPreferred { ProviderSettings.setPreferred(provider) }
+            // Agents on a provider with no key (or with no model yet) move here right away.
+            await ProviderRouting.repairAll(in: context)
             onChange()
         } catch {
             self.error = error.localizedDescription
@@ -199,20 +223,12 @@ struct ProviderKeyView: View {
             let fetched = try await ProviderSettings.fetchModels(for: provider, apiKey: saved)
             if provider != .anthropic { ProviderSettings.setModels(fetched, for: provider) }
             models = ProviderSettings.models(for: provider)
+            if !models.contains(defaultModel) { defaultModel = ProviderSettings.defaultModel(for: provider) }
             if !models.contains(defaultModel) { defaultModel = models.first ?? "" }
+            ProviderSettings.setDefaultModel(defaultModel, for: provider)
         } catch {
             self.error = error.localizedDescription
         }
-    }
-
-    /// With the very first key, agents set to a provider the user has no key for move to this one,
-    /// so the main agent works right away whichever provider they picked.
-    private func moveAgentsWithoutKeys() {
-        for agent in agents where Keychain.key(for: agent.providerKind) == nil {
-            agent.provider = provider.rawValue
-            agent.model = defaultModel
-        }
-        try? context.save()
     }
 }
 

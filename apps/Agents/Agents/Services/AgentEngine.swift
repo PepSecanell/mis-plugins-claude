@@ -94,14 +94,17 @@ final class AgentEngine {
                     model: String) async throws -> (tagline: String, instructions: String) {
         var provider = provider
         var model = model
-        if Keychain.key(for: provider) == nil, let fallback = Provider.configured.first {
+        if Keychain.key(for: provider) == nil, let fallback = ProviderSettings.preferred {
             provider = fallback
             model = ProviderSettings.defaultModel(for: fallback)
         }
         guard Keychain.key(for: provider) != nil else {
             throw ClaudeError(message: "Add an API key in Settings first.")
         }
-        if model.isEmpty { model = ProviderSettings.defaultModel(for: provider) }
+        if model.isEmpty {
+            await ProviderSettings.ensureModels(for: provider)
+            model = ProviderSettings.defaultModel(for: provider)
+        }
         let prompt = """
         Write the configuration for a personal AI agent called "\(name)".
         What the user wants it to do: \(description)
@@ -213,10 +216,14 @@ final class AgentEngine {
     private func runLoop(agent: Agent, system: String, messages initial: [[String: Any]], depth: Int,
                          sink: ChatMessage, root: ChatMessage, conversation: Conversation,
                          clients: ClientPool) async throws -> LoopResult {
+        // An agent whose provider has no key (synced from another device, key removed…) moves to
+        // one that has a key instead of failing.
+        await ProviderRouting.repair(agent)
         var messages = initial
         var result = LoopResult()
         let tools = toolDefinitions(for: agent, conversation: conversation, depth: depth)
         var sources = sink.sources
+        var modelSwaps = 0
 
         for _ in 0..<maxToolRounds {
             try Task.checkCancellation()
@@ -245,7 +252,9 @@ final class AgentEngine {
 
             let sinkID = sink.id
             status[sinkID] = "Thinking…"
-            let response = try await clients.stream(provider: provider, body: body, betas: betas) { [weak self] event in
+            let response: ClaudeResponse
+            do {
+                response = try await clients.stream(provider: provider, body: body, betas: betas) { [weak self] event in
                 guard let self, self.alive(sink) else { return }
                 switch event {
                 case .text(let chunk):
@@ -274,6 +283,13 @@ final class AgentEngine {
                         break
                     }
                 }
+                }
+            } catch let error as ModelUnavailableError {
+                // The provider retired or doesn't offer this model: switch to another and try again.
+                guard modelSwaps < 2, sink.text.isEmpty, await ProviderRouting.replaceModel(of: agent) else { throw error }
+                modelSwaps += 1
+                save()
+                continue
             }
 
             guard alive(sink), alive(conversation) else { throw CancellationError() }

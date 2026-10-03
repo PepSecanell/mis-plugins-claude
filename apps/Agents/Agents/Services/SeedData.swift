@@ -19,6 +19,7 @@ enum SeedData {
         }
         mergeDuplicates(context)
         try? context.save()
+        Task { await ProviderRouting.repairAll(in: context) }
     }
 
     @MainActor

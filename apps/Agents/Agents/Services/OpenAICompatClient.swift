@@ -24,7 +24,7 @@ struct OpenAICompatClient {
         let bytes = try await openStream(request)
 
         var text = ""
-        var toolCalls: [Int: (id: String, name: String, arguments: String)] = [:]
+        var toolCalls: [Int: (id: String, name: String, arguments: String, extra: [String: Any]?)] = [:]
         var finishReason: String?
         var startedText = false
 
@@ -56,8 +56,10 @@ struct OpenAICompatClient {
             for call in (delta["tool_calls"] as? [[String: Any]]) ?? [] {
                 let index = call["index"] as? Int ?? toolCalls.count
                 let function = call["function"] as? [String: Any] ?? [:]
-                var entry = toolCalls[index] ?? (id: "", name: "", arguments: "")
+                var entry = toolCalls[index] ?? (id: "", name: "", arguments: "", extra: nil)
                 if let id = call["id"] as? String, !id.isEmpty { entry.id = id }
+                // Gemini's thought signature: must go back with the call on the next request.
+                if let extra = call["extra_content"] as? [String: Any] { entry.extra = extra }
                 if let name = function["name"] as? String, !name.isEmpty {
                     if entry.name.isEmpty { await onEvent(.blockStarted(type: "tool_use", name: name)) }
                     entry.name = name
@@ -83,7 +85,9 @@ struct OpenAICompatClient {
                     invalid.insert(id)
                 }
             }
-            content.append(["type": "tool_use", "id": id, "name": call.name, "input": input])
+            var block: [String: Any] = ["type": "tool_use", "id": id, "name": call.name, "input": input]
+            if let extra = call.extra { block["extra_content"] = extra }
+            content.append(block)
         }
 
         // Some providers report "stop" even when the reply contains tool calls.
@@ -126,14 +130,19 @@ struct OpenAICompatClient {
                     let input = block["input"] as? [String: Any] ?? [:]
                     let arguments = (try? JSONSerialization.data(withJSONObject: input))
                         .flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
-                    return [
+                    var call: [String: Any] = [
                         "id": block["id"] as? String ?? "",
                         "type": "function",
                         "function": ["name": block["name"] as? String ?? "", "arguments": arguments],
                     ]
+                    if let extra = block["extra_content"] { call["extra_content"] = extra }
+                    return call
                 }
                 var out: [String: Any] = ["role": "assistant", "content": text]
-                if !calls.isEmpty { out["tool_calls"] = calls }
+                if !calls.isEmpty {
+                    out["tool_calls"] = calls
+                    if text.isEmpty { out["content"] = NSNull() }
+                }
                 messages.append(out)
             } else {
                 // Tool results become "tool" messages; any plain text stays a user message.
@@ -186,10 +195,12 @@ struct OpenAICompatClient {
 
             var data = Data()
             for try await byte in bytes { data.append(byte) }
-            if (http.statusCode == 429 || http.statusCode >= 500) && attempt < 2 {
+            // Free tiers (Gemini, Groq…) rate-limit per minute: wait 5s, 10s, 20s before giving up.
+            if (http.statusCode == 429 || http.statusCode >= 500) && attempt < 3 {
                 attempt += 1
-                let header = Double(http.value(forHTTPHeaderField: "retry-after") ?? "") ?? Double(attempt * 3)
-                let seconds = header.isFinite ? max(0, min(header, 20)) : 3
+                let fallback = 5.0 * pow(2.0, Double(attempt - 1))
+                let header = Double(http.value(forHTTPHeaderField: "retry-after") ?? "") ?? fallback
+                let seconds = header.isFinite ? max(1, min(header, 30)) : fallback
                 try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
                 continue
             }

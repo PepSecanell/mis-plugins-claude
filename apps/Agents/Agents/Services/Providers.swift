@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 /// The AI companies an agent can run on. Anthropic uses its own Messages API;
 /// every other provider speaks the OpenAI-compatible Chat Completions API.
@@ -100,7 +101,37 @@ enum ProviderSettings {
         let saved = UserDefaults.standard.string(forKey: key("default", provider)) ?? ""
         if !saved.isEmpty { return saved }
         if provider == .anthropic { return ModelCatalog.defaultModel }
-        return models(for: provider).first ?? ""
+        return suggestedModel(from: models(for: provider))
+    }
+
+    /// Newest model that can chat with tools. Lists are sorted newest first; specialised variants
+    /// (search, deep research, Codex, audio, preview snapshots) can't run the agent loop.
+    static func suggestedModel(from models: [String]) -> String {
+        let unsuited = ["search", "research", "codex", "instruct", "computer-use", "audio", "realtime",
+                        "preview", "vision", "learnlm", "gemma", "nano", "chat-latest", "-pro", "o1"]
+        return models.first { id in !unsuited.contains { id.lowercased().contains($0) } } ?? models.first ?? ""
+    }
+
+    /// The provider agents move to when theirs has no key: the last one the user set up, else any with a key.
+    static var preferred: Provider? {
+        if let raw = UserDefaults.standard.string(forKey: "provider.preferred"),
+           let provider = Provider(rawValue: raw), Keychain.key(for: provider) != nil {
+            return provider
+        }
+        return Provider.configured.first
+    }
+
+    static func setPreferred(_ provider: Provider) {
+        UserDefaults.standard.set(provider.rawValue, forKey: "provider.preferred")
+    }
+
+    /// Downloads the model list when this device doesn't have it yet (a key that arrived
+    /// through iCloud Keychain from another device). Quietly does nothing if it fails.
+    static func ensureModels(for provider: Provider) async {
+        guard provider != .anthropic, models(for: provider).isEmpty,
+              let apiKey = Keychain.key(for: provider),
+              let fetched = try? await fetchModels(for: provider, apiKey: apiKey), !fetched.isEmpty else { return }
+        setModels(fetched, for: provider)
     }
 
     static func setDefaultModel(_ model: String, for provider: Provider) {
@@ -143,11 +174,30 @@ enum ProviderSettings {
         }
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         let items = (json?["data"] as? [[String: Any]]) ?? (json?["models"] as? [[String: Any]]) ?? []
-        let sorted = items.sorted {
-            (($0["created"] as? Double) ?? 0) > (($1["created"] as? Double) ?? 0)
+        let hasDates = items.contains { (($0["created"] as? Double) ?? 0) > 0 }
+        let ids = items.compactMap { ($0["id"] as? String).map { $0.replacingOccurrences(of: "models/", with: "") } }
+        let sorted: [String]
+        if hasDates {
+            let created = Dictionary(items.compactMap { item -> (String, Double)? in
+                guard let id = item["id"] as? String else { return nil }
+                return (id.replacingOccurrences(of: "models/", with: ""), (item["created"] as? Double) ?? 0)
+            }, uniquingKeysWith: { first, _ in first })
+            sorted = ids.sorted { (created[$0] ?? 0) > (created[$1] ?? 0) }
+        } else {
+            // No dates (Gemini, some others): highest version number first, e.g. 3.8 before 2.5.
+            sorted = ids.enumerated().sorted { lhs, rhs in
+                let l = versionKey(lhs.element), r = versionKey(rhs.element)
+                if l.isEmpty != r.isEmpty { return !l.isEmpty } // aliases like "-latest" go last
+                return l != r ? l.lexicographicallyPrecedes(r, by: >) : lhs.offset < rhs.offset
+            }.map(\.element)
         }
-        let ids = sorted.compactMap { ($0["id"] as? String).map { $0.replacingOccurrences(of: "models/", with: "") } }
-        return ids.filter(isChatModel)
+        return sorted.filter(isChatModel)
+    }
+
+    /// The numbers in a model id, e.g. "gemini-3.8-flash" → [3, 8].
+    private static func versionKey(_ id: String) -> [Int] {
+        guard let match = id.range(of: #"\d+(\.\d+)*"#, options: .regularExpression) else { return [] }
+        return id[match].split(separator: ".").compactMap { Int($0) }
     }
 
     /// Drops embedding, image, audio and moderation models from a provider's model list.
@@ -156,6 +206,19 @@ enum ProviderSettings {
         let excluded = ["embed", "tts", "whisper", "dall-e", "image", "audio", "moderation", "realtime",
                         "transcribe", "speech", "imagen", "veo", "aqa", "rerank", "guard", "ocr", "babbage", "davinci"]
         return !excluded.contains { lowered.contains($0) }
+    }
+}
+
+/// The provider said the agent's model doesn't exist or was retired.
+struct ModelUnavailableError: LocalizedError {
+    let message: String
+    var errorDescription: String? { message }
+
+    static func matches(_ text: String) -> Bool {
+        let lowered = text.lowercased()
+        guard lowered.contains("model") else { return false }
+        return ["not found", "no longer available", "does not exist", "deprecated", "not supported",
+                "decommissioned", "invalid model", "unknown model", "not available"].contains { lowered.contains($0) }
     }
 }
 
@@ -170,11 +233,72 @@ struct ClientPool {
         guard ProviderSettings.hasConsent(provider) else {
             throw ClaudeError(message: "Open Settings and allow sending chats to \(provider.name) first.")
         }
-        switch provider {
-        case .anthropic:
-            return try await ClaudeClient(apiKey: key).stream(body: body, betas: betas, onEvent: onEvent)
-        default:
-            return try await OpenAICompatClient(provider: provider, apiKey: key).stream(body: body, onEvent: onEvent)
+        do {
+            switch provider {
+            case .anthropic:
+                return try await ClaudeClient(apiKey: key).stream(body: body, betas: betas, onEvent: onEvent)
+            default:
+                return try await OpenAICompatClient(provider: provider, apiKey: key).stream(body: body, onEvent: onEvent)
+            }
+        } catch let error as ClaudeError where ModelUnavailableError.matches(error.message) {
+            throw ModelUnavailableError(message: error.message)
         }
+    }
+}
+
+/// Keeps every agent on a provider the user actually has a key for, so no agent fails with
+/// "add your X key" after keys change or agents sync in from another device.
+enum ProviderRouting {
+    /// Moves one agent to the preferred provider if its own has no key, and fills in a missing model.
+    @MainActor
+    static func repair(_ agent: Agent) async {
+        if Keychain.key(for: agent.providerKind) == nil, let fallback = ProviderSettings.preferred {
+            agent.provider = fallback.rawValue
+            agent.model = ""
+        }
+        let provider = agent.providerKind
+        if agent.model.trimmingCharacters(in: .whitespaces).isEmpty {
+            await ProviderSettings.ensureModels(for: provider)
+            agent.model = ProviderSettings.defaultModel(for: provider)
+        }
+    }
+
+    /// After the provider rejected the agent's model: pick the next suitable one and refresh the list.
+    /// Returns false when there's nothing else to try.
+    @MainActor
+    static func replaceModel(of agent: Agent) async -> Bool {
+        let provider = agent.providerKind
+        let failed = agent.model
+        if provider != .anthropic, let apiKey = Keychain.key(for: provider),
+           let fetched = try? await ProviderSettings.fetchModels(for: provider, apiKey: apiKey), !fetched.isEmpty {
+            ProviderSettings.setModels(fetched, for: provider)
+        }
+        let candidates = ProviderSettings.models(for: provider).filter { $0 != failed }
+        let next = ProviderSettings.suggestedModel(from: candidates)
+        guard !next.isEmpty else { return false }
+        agent.model = next
+        if ProviderSettings.defaultModel(for: provider) == failed {
+            ProviderSettings.setDefaultModel(next, for: provider)
+        }
+        return true
+    }
+
+    @MainActor
+    static func repairAll(in context: ModelContext) async {
+        let agents = (try? context.fetch(FetchDescriptor<Agent>())) ?? []
+        for agent in agents { await repair(agent) }
+        try? context.save()
+    }
+
+    /// Puts every agent on one provider ("Use for all agents" in Settings).
+    @MainActor
+    static func moveAll(to provider: Provider, in context: ModelContext) {
+        let model = ProviderSettings.defaultModel(for: provider)
+        for agent in (try? context.fetch(FetchDescriptor<Agent>())) ?? [] {
+            agent.provider = provider.rawValue
+            agent.model = model
+        }
+        ProviderSettings.setPreferred(provider)
+        try? context.save()
     }
 }
