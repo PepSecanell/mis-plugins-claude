@@ -1,58 +1,455 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Agent Teams · Your own team of AI agents</title>
-<meta name="description" content="Agent Teams: build your own team of AI agents on iPhone, iPad and Mac, with your own key from any AI provider.">
-<style>
-  :root { --ground:#F6F5FA; --ink:#16131F; --muted:#5B5868; --accent:#5B45B8; --line:#DEDAEA; --card:#FFFFFF; }
-  * { box-sizing:border-box; }
-  html { -webkit-text-size-adjust:100%; }
-  body { margin:0; background:var(--ground); color:var(--ink);
-         font:17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-  main { max-width:720px; margin:0 auto; padding:36px 22px 72px; }
-  header p { color:var(--muted); margin:4px 0 0; }
-  h1 { font-size:2rem; line-height:1.2; margin:0; letter-spacing:-0.01em; }
-  h2 { font-size:1.2rem; margin:40px 0 8px; }
-  p, li { margin:0 0 12px; }
-  ul { padding-left:1.2em; margin:0 0 12px; }
-  a { color:var(--accent); text-underline-offset:2px; }
-  .summary { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin:28px 0 8px; }
-  .summary ul:last-child { margin-bottom:0; }
-  footer { margin-top:56px; padding-top:18px; border-top:1px solid var(--line); color:var(--muted); font-size:0.9rem; }
-  footer a { margin-right:14px; }
-  .topbar { max-width:720px; margin:0 auto; padding:18px 22px 0; display:flex; align-items:center; justify-content:space-between; }
-  .topbar a.home { color:var(--ink); text-decoration:none; font-weight:600; font-size:1.1rem; }
-  .topbar a.back { color:var(--muted); font-size:.95rem; text-decoration:none; }
-  a:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
-  @media (prefers-color-scheme: dark) { :root { --ground:#100E17; --ink:#ECEAF3; --muted:#A9A5B8; --accent:#A996F2; --line:#2B2838; --card:#1A1724; } }
-</style>
+<meta name="description" content="Talk to Chief and it builds you a team of AI agents that work together. Free for iPhone, iPad and Mac, with your own key from Anthropic, OpenAI, Google Gemini and more.">
+<link rel="canonical" href="https://agents.keak.app/">
+<meta name="theme-color" content="#FBFAFE" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#09080D" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Agent Teams">
+<meta property="og:title" content="Agent Teams · Your own team of AI agents">
+<meta property="og:description" content="Talk to Chief and it builds you a team of AI agents that work together. Free for iPhone, iPad and Mac, with your own AI key.">
+<meta property="og:url" content="https://agents.keak.app/">
+<meta property="og:image" content="https://agents.keak.app/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Agent Teams on iPhone: Chief proposing a team of Coach, Chef and Tutor.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent Teams · Your own team of AI agents">
+<meta name="twitter:description" content="Talk to Chief and it builds you a team of AI agents that work together. Free for iPhone, iPad and Mac.">
+<meta name="twitter:image" content="https://agents.keak.app/img/og.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/img/favicon-64.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preload" as="image" href="/img/iphone-chief.webp" type="image/webp" fetchpriority="high">
+<link rel="stylesheet" href="/assets/site.css">
+<script>document.documentElement.className = "js";</script>
 </head>
 <body>
-<header class="topbar">
-  <a class="home" href="/">🧭 Agent Teams</a>
-  <a class="back" href="/">Home</a>
-</header>
-<main>
-  <header>
-    <h1>Your own team of AI agents</h1>
-    <p>For iPhone, iPad and Mac</p>
-  </header>
-  <div class="summary">
-    <p>Talk to Chief, your main agent, about what you want help with. Chief builds a team of specialist agents just for you, and they work together in group chats, consult each other and remember what matters about you.</p>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Agent Teams home"><img src="/img/icon-256.png" width="28" height="28" alt=""> Agent Teams</a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn btn-sm nav-cta" href="#download">Coming soon</a>
   </div>
-  <h2>How it works</h2>
-  <ul>
-    <li><strong>Bring your own AI.</strong> Use a key from Anthropic, OpenAI, Google Gemini, xAI, OpenRouter, Mistral, DeepSeek or Groq. Each agent can run on a different model.</li>
-    <li><strong>Agents that work together.</strong> Group chats where the main agent hands off to the right specialist, and private consults you can open and read.</li>
-    <li><strong>Shared memory.</strong> Facts about you that every agent knows, which you can see and edit.</li>
-    <li><strong>Private by design.</strong> No accounts and no tracking. Chats go straight from your device to your provider and sync through your own iCloud.</li>
-  </ul>
-  <footer>
-    <a href="/privacy.html">Privacy Policy</a><a href="/support.html">Support</a><a href="mailto:keoly.app@gmail.com">keoly.app@gmail.com</a>
-    <p>Agent Teams · © 2026 Pep Secanell</p>
-  </footer>
+</header>
+
+<main id="main">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top" data-progress="leave" aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="wrap hero-copy">
+      <span class="eyebrow load" style="--ld:0ms">For iPhone, iPad and Mac</span>
+      <h1 class="h-xl load" id="hero-title" style="--ld:80ms">Your own <span class="grad">team</span> of AI&nbsp;agents.</h1>
+      <p class="lede load" style="--ld:180ms">Tell Chief what you want help with. It builds you a team of specialist agents, and they work on it together.</p>
+      <div class="hero-ctas load" style="--ld:280ms">
+        <a class="soon-badge" href="#download" aria-label="Coming soon to the App Store. Agent Teams is in App Store review.">
+          <img src="/img/icon-256.png" width="36" height="36" alt="">
+          <span><small>Coming soon to the</small><strong>App Store</strong></span>
+          <span class="soon-dot" aria-hidden="true"></span>
+        </a>
+        <a class="btn btn-ghost" href="#how">See how it works <span class="arrow" aria-hidden="true">&rsaquo;</span></a>
+      </div>
+      <p class="hero-note load" style="--ld:360ms">Free app. Bring your own AI key.</p>
+    </div>
+
+    <div class="hero-stage">
+      <div class="ph ph-l"><div class="in-l">
+        <div class="dev iphone"><div class="frame"><div class="screen">
+          <img class="shot" src="/img/iphone-home.webp" width="660" height="1434" alt="The Agent Teams home screen with agents Chief, Coach, Chef and Tutor, and chats below." decoding="async">
+        </div></div></div>
+      </div></div>
+      <div class="ph ph-r"><div class="in-r">
+        <div class="dev iphone"><div class="frame"><div class="screen">
+          <img class="shot" src="/img/iphone-team.webp" width="660" height="1434" alt="The Health Team group chat, where Chief consulted two agents and replies with a weekly plan." decoding="async">
+        </div></div></div>
+      </div></div>
+      <div class="ph ph-c"><div class="in-c">
+        <div class="dev iphone"><div class="frame"><div class="screen">
+          <img class="shot" src="/img/iphone-chief.webp" width="660" height="1434" alt="A chat with Chief. It proposes a team of Coach, Chef and Tutor, then creates them and a Health Team group chat." fetchpriority="high" decoding="async">
+        </div></div></div>
+      </div></div>
+
+      <div class="chip-wrap" style="left:calc(50% - min(340px, 47vw)); top:13%; --py:-130px" aria-hidden="true">
+        <div class="float" style="--bd:0s"><span class="chip" style="--ld:1100ms"><span class="spark">&#10022;</span> Created <span class="em" style="--c:#46A758">🏃</span> Coach</span></div>
+      </div>
+      <div class="chip-wrap" style="right:calc(50% - min(350px, 47vw)); top:27%; --py:-70px" aria-hidden="true">
+        <div class="float" style="--bd:-2s"><span class="chip" style="--ld:1300ms"><span class="spark">&#10022;</span> Created <span class="em" style="--c:#F76B15">🥗</span> Chef</span></div>
+      </div>
+      <div class="chip-wrap" style="left:calc(50% - min(370px, 47vw)); top:43%; --py:-40px" aria-hidden="true">
+        <div class="float" style="--bd:-4s"><span class="chip" style="--ld:1500ms"><span class="spark">&#10022;</span> Created <span class="em" style="--c:#3E63DD">📚</span> Tutor</span></div>
+      </div>
+      <div class="chip-wrap" style="right:calc(50% - min(380px, 47vw)); top:52%; --py:-100px" aria-hidden="true">
+        <div class="float" style="--bd:-1s"><span class="chip" style="--ld:1700ms"><span class="em" style="--c:#6E56CF">🧭</span> Consulted 2 agents</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEAM ASSEMBLES ============ -->
+  <section class="assemble" id="assemble" data-progress="pin" aria-labelledby="assemble-title">
+    <div class="pin">
+      <h2 class="h-lg" id="assemble-title">One chat with Chief. A&nbsp;whole <span class="grad">team</span> behind&nbsp;it.</h2>
+      <div class="stage" id="stage" role="img" aria-label="Chief in the middle, with six specialist agents around it: Coach, Chef, Tutor, Money, Writer and Travel, each on its own AI model.">
+        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+          <path class="ring" pathLength="1" d="M50 12 L82.9 31 L82.9 69 L50 88 L17.1 69 L17.1 31 Z"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="50" y2="12" stroke="#46A758"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="82.9" y2="31" stroke="#F76B15"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="82.9" y2="69" stroke="#3E63DD"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="50" y2="88" stroke="#FFC53D"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="17.1" y2="69" stroke="#E54666"/>
+          <line class="ln" pathLength="1" x1="50" y1="50" x2="17.1" y2="31" stroke="#0090FF"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="50" y2="12" stroke="#46A758"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="82.9" y2="31" stroke="#F76B15"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="82.9" y2="69" stroke="#3E63DD"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="50" y2="88" stroke="#FFC53D"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="17.1" y2="69" stroke="#E54666"/>
+          <line class="flow" pathLength="1" x1="50" y1="50" x2="17.1" y2="31" stroke="#0090FF"/>
+        </svg>
+        <div class="node agent" style="--x:50%;--y:12%;--c:#46A758;--sx:-12vw;--sy:-48vh;--sr:-30deg"><div class="av">🏃</div><div class="lbl"><span class="nm">Coach</span><span class="md">Claude</span></div></div>
+        <div class="node agent" style="--x:82.9%;--y:31%;--c:#F76B15;--sx:42vw;--sy:-30vh;--sr:25deg"><div class="av">🥗</div><div class="lbl"><span class="nm">Chef</span><span class="md">Gemini</span></div></div>
+        <div class="node agent" style="--x:82.9%;--y:69%;--c:#3E63DD;--sx:46vw;--sy:22vh;--sr:-20deg"><div class="av">📚</div><div class="lbl"><span class="nm">Tutor</span><span class="md">GPT</span></div></div>
+        <div class="node agent" style="--x:50%;--y:88%;--c:#FFC53D;--sx:10vw;--sy:46vh;--sr:30deg"><div class="av">💶</div><div class="lbl"><span class="nm">Money</span><span class="md">Mistral</span></div></div>
+        <div class="node agent" style="--x:17.1%;--y:69%;--c:#E54666;--sx:-46vw;--sy:26vh;--sr:-25deg"><div class="av">✍️</div><div class="lbl"><span class="nm">Writer</span><span class="md">Grok</span></div></div>
+        <div class="node agent" style="--x:17.1%;--y:31%;--c:#0090FF;--sx:-42vw;--sy:-32vh;--sr:20deg"><div class="av">✈️</div><div class="lbl"><span class="nm">Travel</span><span class="md">DeepSeek</span></div></div>
+        <div class="node chief" style="--x:50%;--y:50%;--c:#6E56CF"><div class="av">🧭<span class="star" aria-hidden="true">&#9733;</span></div></div>
+      </div>
+      <p class="cap">Chief picks the names, emoji, instructions and models for each agent. You can change any of it.</p>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS (sticky chat) ============ -->
+  <section class="how" id="how" data-progress="pin" aria-labelledby="how-title">
+    <div class="pin">
+      <div class="how-grid">
+        <div class="how-copy">
+          <span class="eyebrow">How it works</span>
+          <h2 class="h-md" id="how-title">It starts with one conversation.</h2>
+          <ol class="steps">
+            <li class="step"><span class="bar" aria-hidden="true"></span>
+              <h3>Tell Chief what you need.</h3>
+              <p>Chief is your main agent. Say what you want help with and it asks a few questions to get it right.</p>
+            </li>
+            <li class="step"><span class="bar" aria-hidden="true"></span>
+              <h3>Chief builds your team.</h3>
+              <p>It proposes specialists and creates them for you, with names, emoji, instructions and models.</p>
+            </li>
+            <li class="step"><span class="bar" aria-hidden="true"></span>
+              <h3>They work on it together.</h3>
+              <p>In a group chat, Chief answers or hands off to the right agent. When agents consult each other, you can open the panel and read it.</p>
+            </li>
+          </ol>
+          <div class="how-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+
+        <div class="how-phone">
+          <div class="dev iphone"><div class="frame"><div class="screen">
+            <div class="mock" role="img" aria-label="An animated chat. You ask Chief for help getting fit during exams. Chief asks how much time you have, proposes Coach, Chef and Tutor, and creates them with a Health Team group chat. In Health Team, Chief consults Coach and Chef, then replies with a weekly plan.">
+              <div class="m-island"></div>
+
+              <!-- Chat with Chief -->
+              <div class="pane pane-a" aria-hidden="true">
+                <div class="m-status"><span>9:41</span><span class="m-icons"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0L8 11.5Zm-4.2-4.3L2.3 5.6a8 8 0 0 1 11.4 0l-1.5 1.6a5.9 5.9 0 0 0-8.4 0ZM.8 4.1 0 3.3a11.3 11.3 0 0 1 16 0l-.8.8L.8 4.1Z"/></svg><svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2"/><rect x="23.6" y="4" width="1.8" height="4" rx=".9" opacity=".45"/></svg></span></div>
+                <div class="m-head"><span class="m-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></span><span>Chief</span><span class="m-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5" stroke-linecap="round"/></svg></span></div>
+                <div class="m-body">
+                  <div class="row me" data-s="1" data-t="250"><div class="in"><div class="msg bub">I want to get fit and eat better, but I'm busy with exams until June. Can you help?</div></div></div>
+                  <div class="row typing" data-s="1" data-t="1100" data-until="2300"><div class="in"><div class="msg ai"><span class="pic">🧭</span><span><span class="dots"><i></i><i></i><i></i></span></span></div></div></div>
+                  <div class="row" data-s="1" data-t="2300"><div class="in"><div class="msg ai"><span class="pic">🧭</span><div><p>Definitely. First, how much time do you have on a normal day?</p></div></div></div></div>
+                  <div class="row me" data-s="1" data-t="3500"><div class="in"><div class="msg bub">About 30 minutes.</div></div></div>
+
+                  <div class="row typing" data-s="2" data-t="100" data-until="1200"><div class="in"><div class="msg ai"><span class="pic">🧭</span><span><span class="dots"><i></i><i></i><i></i></span></span></div></div></div>
+                  <div class="row" data-s="2" data-t="1200"><div class="in"><div class="msg ai"><span class="pic">🧭</span><div><p>Then the plan has to be small and automatic. Here's the team I'd set up:</p><ul><li>🏃 <b>Coach</b>: 3 short workouts a week, no gym</li><li>🥗 <b>Chef</b>: quick high-protein meals</li><li>📚 <b>Tutor</b>: a revision timetable with room for both</li></ul></div></div></div></div>
+                  <div class="row me" data-s="2" data-t="2500"><div class="in"><div class="msg bub">Perfect, do it</div></div></div>
+                  <div class="row" data-s="2" data-t="3100"><div class="in"><div class="msg sys"><span class="sp">&#10022;</span>Created <b>🏃 Coach</b></div></div></div>
+                  <div class="row" data-s="2" data-t="3500"><div class="in"><div class="msg sys"><span class="sp">&#10022;</span>Created <b>🥗 Chef</b></div></div></div>
+                  <div class="row" data-s="2" data-t="3900"><div class="in"><div class="msg sys"><span class="sp">&#10022;</span>Created <b>📚 Tutor</b></div></div></div>
+                  <div class="row" data-s="2" data-t="4300"><div class="in"><div class="msg sys"><span class="sp">&#10022;</span>Created group chat <b>Health Team</b></div></div></div>
+                </div>
+                <div class="m-input"><span>Message</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></div>
+              </div>
+
+              <!-- Health Team group chat -->
+              <div class="pane pane-b" aria-hidden="true">
+                <div class="m-status"><span>9:41</span><span class="m-icons"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0L8 11.5Zm-4.2-4.3L2.3 5.6a8 8 0 0 1 11.4 0l-1.5 1.6a5.9 5.9 0 0 0-8.4 0ZM.8 4.1 0 3.3a11.3 11.3 0 0 1 16 0l-.8.8L.8 4.1Z"/></svg><svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2"/><rect x="23.6" y="4" width="1.8" height="4" rx=".9" opacity=".45"/></svg></span></div>
+                <div class="m-head"><span class="m-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></span><span>Health Team</span><span class="m-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5" stroke-linecap="round"/></svg></span></div>
+                <div class="m-body">
+                  <div class="row me" data-s="3" data-t="800"><div class="in"><div class="msg bub">Plan my week: 3 workouts and easy dinners. I only have 30 minutes a day.</div></div></div>
+                  <div class="row" data-s="3" data-t="1600"><div class="in"><div class="msg ai"><span class="pic">🧭</span><div>
+                    <div class="who">Chief</div>
+                    <div class="consult" data-s="3" data-t="2500" data-cls="open">
+                      <div class="top"><span class="faces"><span style="--c:#46A758">🏃</span><span style="--c:#F76B15">🥗</span></span>Consulted 2 agents<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div>
+                      <div class="body"><div><div class="qa">
+                        <p><b>Asked 🏃 Coach:</b> three home workouts that fit in 30 minutes?</p>
+                        <p><b>Asked 🥗 Chef:</b> easy dinners, under 20 minutes?</p>
+                      </div></div></div>
+                    </div>
+                    <div class="row" data-s="3" data-t="3700"><div class="in"><div class="msg">
+                      <p>Here's your week, built with Coach and Chef:</p>
+                      <ul><li><b>Mon</b>: full body, 25 min</li><li><b>Wed</b>: brisk walk + mobility</li><li><b>Sat</b>: full body, one more rep</li></ul>
+                      <p>Cook the curry on Sunday and it covers two nights. Want a shopping list?</p>
+                    </div></div></div>
+                  </div></div></div></div>
+                </div>
+                <div class="m-input"><span>Message the team... (@ to mention)</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></i></div>
+              </div>
+            </div>
+          </div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <section class="sec" id="features" aria-labelledby="features-title">
+    <div class="wrap">
+      <div class="sec-head center">
+        <span class="eyebrow" data-reveal>Features</span>
+        <h2 class="h-lg" id="features-title" data-reveal>A team that actually works&nbsp;together.</h2>
+        <p class="lede" data-reveal>Each agent knows its job. They share what they know about you, and they can check with each other before answering.</p>
+      </div>
+
+      <div class="bento" data-stagger="90">
+        <article class="card wide" data-reveal>
+          <h3>Group chats with your team</h3>
+          <p>Ask the whole team at once. The main agent answers, or hands you to the right specialist. @mention one agent, or @everyone.</p>
+          <div class="viz"><div class="mini" aria-hidden="true">
+            <div class="r" style="--md:250ms"><div class="me"><span class="mention">@everyone</span> I have a big exam on Friday. What changes this week?</div></div>
+            <div class="r" style="--md:650ms"><span class="av" style="--c:#46A758">🏃</span><div class="t"><b>Coach</b>Swap Wednesday's workout for a 20 minute walk. Keep Saturday.</div></div>
+            <div class="r" style="--md:1000ms"><span class="av" style="--c:#F76B15">🥗</span><div class="t"><b>Chef</b>Cook the curry on Sunday so two dinners are already done.</div></div>
+            <div class="r" style="--md:1350ms"><span class="av" style="--c:#3E63DD">📚</span><div class="t"><b>Tutor</b>Thursday is a light review day. Early night before the exam.</div></div>
+          </div></div>
+        </article>
+
+        <article class="card" data-reveal>
+          <h3>See who asked what</h3>
+          <p>Agents consult each other in private when they need a second opinion. Open the panel to read the whole exchange.</p>
+          <div class="viz" aria-hidden="true">
+            <div class="consult open-on-in">
+              <div class="top"><span class="faces"><span style="--c:#46A758">🏃</span><span style="--c:#F76B15">🥗</span></span>Consulted 2 agents<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="body"><div><div class="qa">
+                <p><b>Asked 🏃 Coach:</b> workouts that fit in 30 minutes?</p>
+                <p><b>Asked 🥗 Chef:</b> dinners under 20 minutes?</p>
+              </div></div></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-reveal>
+          <h3>One shared memory</h3>
+          <p>Every agent reads your "About me", so you explain things once. You can see it and edit it any time.</p>
+          <div class="viz" aria-hidden="true"><div class="mini">
+            <ul class="facts">
+              <li class="hd">About me</li>
+              <li style="--c:#12A594;--md:300ms">Studying for exams until June</li>
+              <li style="--c:#F76B15;--md:500ms">About 30 minutes free a day</li>
+              <li style="--c:#6E56CF;--md:700ms">Likes short, direct answers</li>
+            </ul>
+          </div></div>
+        </article>
+
+        <article class="card" data-reveal>
+          <h3>Web search on Claude</h3>
+          <p>Agents running on Claude models can search the web when a question needs fresh information.</p>
+          <div class="viz" aria-hidden="true">
+            <div class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><span class="typed">exam timetable tips for June</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-reveal>
+          <h3>Copy, reply, share, retry</h3>
+          <p>Long-press a message on iPhone or iPad, or right-click it on Mac.</p>
+          <div class="viz" aria-hidden="true">
+            <div class="menu-bubble">Want a shopping list?</div>
+            <div class="menu">
+              <div>Copy <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></div>
+              <div>Reply <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11Z"/></svg></div>
+              <div>Share <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v13M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></div>
+              <div>Retry <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BRING YOUR OWN AI ============ -->
+  <section class="sec" id="ai" aria-labelledby="ai-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center">
+        <span class="eyebrow" data-reveal>Bring your own AI</span>
+        <h2 class="h-lg" id="ai-title" data-reveal>Use the AI you already&nbsp;like.</h2>
+        <p class="lede" data-reveal>Add a key from any of these providers. Each agent can run on a different model, so your coach can use Claude while your chef uses Gemini.</p>
+      </div>
+    </div>
+    <ul class="sr-only">
+      <li>Anthropic (Claude)</li><li>OpenAI</li><li>Google Gemini</li><li>xAI (Grok)</li><li>OpenRouter</li><li>Mistral</li><li>DeepSeek</li><li>Groq</li>
+    </ul>
+    <div data-reveal>
+      <div class="marquee" aria-hidden="true"><div class="track">
+        <span class="pchip"><i style="--c:#F76B15"></i>Anthropic <small>Claude</small></span>
+        <span class="pchip"><i style="--c:#12A594"></i>OpenAI</span>
+        <span class="pchip"><i style="--c:#3E63DD"></i>Google <small>Gemini</small></span>
+        <span class="pchip"><i style="--c:#E54666"></i>xAI <small>Grok</small></span>
+        <span class="pchip"><i style="--c:#0090FF"></i>OpenRouter</span>
+        <span class="pchip"><i style="--c:#FFC53D"></i>Mistral</span>
+        <span class="pchip"><i style="--c:#6E56CF"></i>DeepSeek</span>
+        <span class="pchip"><i style="--c:#46A758"></i>Groq</span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#F76B15"></i>Anthropic <small>Claude</small></span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#12A594"></i>OpenAI</span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#3E63DD"></i>Google <small>Gemini</small></span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#E54666"></i>xAI <small>Grok</small></span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#0090FF"></i>OpenRouter</span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#FFC53D"></i>Mistral</span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#6E56CF"></i>DeepSeek</span>
+        <span class="pchip" aria-hidden="true"><i style="--c:#46A758"></i>Groq</span>
+      </div></div>
+      <div class="marquee rev" aria-hidden="true"><div class="track">
+        <span class="mtag"><span class="em" style="--c:#6E56CF">🧭</span><b>Chief</b><span class="pv">on Claude</span></span>
+        <span class="mtag"><span class="em" style="--c:#46A758">🏃</span><b>Coach</b><span class="pv">on Claude</span></span>
+        <span class="mtag"><span class="em" style="--c:#F76B15">🥗</span><b>Chef</b><span class="pv">on Gemini</span></span>
+        <span class="mtag"><span class="em" style="--c:#3E63DD">📚</span><b>Tutor</b><span class="pv">on GPT</span></span>
+        <span class="mtag"><span class="em" style="--c:#FFC53D">💶</span><b>Money</b><span class="pv">on Mistral</span></span>
+        <span class="mtag"><span class="em" style="--c:#E54666">✍️</span><b>Writer</b><span class="pv">on Grok</span></span>
+        <span class="mtag"><span class="em" style="--c:#0090FF">✈️</span><b>Travel</b><span class="pv">on DeepSeek</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#6E56CF">🧭</span><b>Chief</b><span class="pv">on Claude</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#46A758">🏃</span><b>Coach</b><span class="pv">on Claude</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#F76B15">🥗</span><b>Chef</b><span class="pv">on Gemini</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#3E63DD">📚</span><b>Tutor</b><span class="pv">on GPT</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#FFC53D">💶</span><b>Money</b><span class="pv">on Mistral</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#E54666">✍️</span><b>Writer</b><span class="pv">on Grok</span></span>
+        <span class="mtag" aria-hidden="true"><span class="em" style="--c:#0090FF">✈️</span><b>Travel</b><span class="pv">on DeepSeek</span></span>
+      </div></div>
+    </div>
+    <div class="wrap">
+      <div class="trio" data-stagger="110">
+        <div class="stat" data-reveal><div class="big grad">€0</div><h3>No subscription</h3><p>The app is free. There's no plan to upgrade to.</p></div>
+        <div class="stat" data-reveal><div class="big grad">Direct</div><h3>Pay your provider</h3><p>Usually a fraction of a cent to a few cents per message, depending on the model.</p></div>
+        <div class="stat" data-reveal><div class="big grad">Yours</div><h3>Your key stays yours</h3><p>Saved in your device's Keychain and only ever sent to the provider it belongs to.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRIVACY ============ -->
+  <section class="sec privacy" id="privacy" aria-labelledby="privacy-title">
+    <div class="wrap">
+      <div class="sec-head center" style="margin-bottom:0">
+        <span class="eyebrow" data-reveal>Privacy</span>
+        <h2 class="h-lg" id="privacy-title" data-reveal>Your chats are <span class="grad">your&nbsp;business.</span></h2>
+        <p class="lede" data-reveal>There's no account to make and no server of mine in the middle. Messages go straight from your device to the AI provider you picked.</p>
+      </div>
+
+      <div class="flowline" data-reveal aria-hidden="true">
+        <div class="endpt"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M10.5 5h3" stroke-linecap="round"/></svg></span>Your device<small>iPhone, iPad or Mac</small></div>
+        <div class="pipe"><span class="lbl"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Encrypted, direct</span><span class="pkt"></span><span class="pkt b"></span></div>
+        <div class="endpt"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4Z" stroke-linejoin="round"/><path d="M18 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z" stroke-linejoin="round"/></svg></span>Your AI provider<small>with your own key</small></div>
+      </div>
+      <p class="nogo" data-reveal>In the middle: <s>Agent Teams servers</s>. There aren't any.</p>
+
+      <ul class="ticks" data-stagger="90">
+        <li data-reveal><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6M3 3l18 18"/></svg></span><h3>No accounts</h3><p>Open the app and start. There's nothing to sign up for.</p></li>
+        <li data-reveal><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg></span><h3>No ads or tracking</h3><p>No analytics and no tracking code of any kind.</p></li>
+        <li data-reveal><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.2-8 9-4.6-.8-8-4.5-8-9V6Z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><h3>It asks first</h3><p>The app asks your permission before it sends anything to a provider.</p></li>
+        <li data-reveal><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 8.5a4.8 4.8 0 0 1-.5 9.5Z"/></svg></span><h3>Your own iCloud</h3><p>Agents and chats sync through your iCloud. Keys stay in your Keychain.</p></li>
+      </ul>
+      <p class="more" data-reveal><a href="/privacy.html">Read the privacy policy</a></p>
+    </div>
+  </section>
+
+  <!-- ============ DEVICES ============ -->
+  <section class="sec devices" id="devices" aria-labelledby="devices-title">
+    <div class="wrap">
+      <div class="sec-head center">
+        <span class="eyebrow" data-reveal>iPhone, iPad and Mac</span>
+        <h2 class="h-lg" id="devices-title" data-reveal>Your team, on every&nbsp;screen.</h2>
+        <p class="lede" data-reveal>One app for all three. Your agents and chats follow you between devices through iCloud.</p>
+      </div>
+      <div class="stage-d" data-progress="enter">
+        <div class="d-mac dev mac">
+          <div class="lid"><div class="screen"><img class="shot" src="/img/mac-team.webp" width="1800" height="1125" loading="lazy" decoding="async" alt="Agent Teams on Mac: the sidebar with agents and chats, and the Health Team chat open."></div></div>
+          <div class="base"></div>
+        </div>
+        <div class="d-ipad dev ipad"><div class="frame"><div class="screen"><img class="shot" src="/img/ipad-team.webp" width="1032" height="1376" loading="lazy" decoding="async" alt="Agent Teams on iPad with the sidebar and the Health Team chat side by side."></div></div></div>
+        <div class="d-iphone dev iphone"><div class="frame"><div class="screen"><img class="shot" src="/img/iphone-home.webp" width="660" height="1434" loading="lazy" decoding="async" alt="Agent Teams on iPhone showing your agents and chats."></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="sec" id="faq" aria-labelledby="faq-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head center">
+        <h2 class="h-lg" id="faq-title" data-reveal>Questions</h2>
+      </div>
+      <div class="faq" data-reveal>
+        <details>
+          <summary>How much does it cost?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>The app is free, with no subscription. You pay your AI provider directly for what you use, usually a fraction of a cent to a few cents per message depending on the model.</p></div>
+        </details>
+        <details>
+          <summary>What's an API key, and where do I get one?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>It's what lets the app use your account with an AI provider. You create one on the provider's website, paste it into Settings, and the app checks it and loads the models it can use.</p><p>Some providers need billing set up before a key works.</p></div>
+        </details>
+        <details>
+          <summary>Which AI providers work?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>Anthropic (Claude), OpenAI, Google Gemini, xAI (Grok), OpenRouter, Mistral, DeepSeek and Groq. Each agent can use a different provider and model.</p></div>
+        </details>
+        <details>
+          <summary>Can anyone read my chats?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>I can't. There's no account and no server of mine involved. Your messages go from your device straight to your provider, and the app asks your permission before sending anything to one.</p><p>Your provider handles what you send under its own terms. The <a href="/privacy.html">privacy policy</a> has the details.</p></div>
+        </details>
+        <details>
+          <summary>Does it sync between my devices?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>Yes, through your own iCloud. Sign in to the same iCloud account on your iPhone, iPad and Mac and your agents and chats stay in sync. Keys sync through iCloud Keychain if you use it.</p></div>
+        </details>
+        <details>
+          <summary>When can I download it?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans"><p>Agent Teams is in App Store review right now. The download link goes on this page as soon as it's approved.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOWNLOAD ============ -->
+  <section class="sec download" id="download" aria-labelledby="download-title">
+    <div class="halo" aria-hidden="true"></div>
+    <div class="wrap">
+      <img class="icon-big" src="/img/icon-256.png" width="148" height="148" alt="Agent Teams app icon" loading="lazy" data-reveal="scale">
+      <h2 class="h-lg" id="download-title" data-reveal>Coming soon to the App&nbsp;Store.</h2>
+      <p class="lede" data-reveal>Agent Teams is in App Store review. It'll be free on iPhone, iPad and Mac.</p>
+      <div data-reveal>
+        <span class="soon-badge" role="note" aria-label="Coming soon to the App Store. In review.">
+          <img src="/img/icon-256.png" width="36" height="36" alt="">
+          <span><small>In review</small><strong>Coming soon</strong></span>
+          <span class="soon-dot" aria-hidden="true"></span>
+        </span>
+      </div>
+      <p class="contact" data-reveal>Questions in the meantime? Email <a href="mailto:keoly.app@gmail.com">keoly.app@gmail.com</a></p>
+    </div>
+  </section>
 </main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="brand" href="/"><img src="/img/icon-256.png" width="24" height="24" alt="" loading="lazy"> Agent Teams</a>
+    <nav aria-label="Footer">
+      <a href="/privacy.html">Privacy Policy</a>
+      <a href="/support.html">Support</a>
+      <a href="mailto:keoly.app@gmail.com">keoly.app@gmail.com</a>
+    </nav>
+    <p class="copy">Made by Pep Secanell in Spain · © 2026</p>
+  </div>
+</footer>
+
+<script src="/assets/site.js" defer></script>
 </body>
 </html>
