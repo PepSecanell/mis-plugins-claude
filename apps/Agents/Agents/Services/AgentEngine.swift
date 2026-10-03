@@ -194,6 +194,11 @@ final class AgentEngine {
         do {
             let result = try await runLoop(agent: agent, system: system, messages: history, depth: 0,
                                            sink: reply, root: reply, conversation: conversation, clients: clients)
+            // An agent that only handed off (no text, no consults) leaves no empty bubble behind.
+            if alive(reply), reply.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+               !(conversation.messages ?? []).contains(where: { $0.parentID == reply.id }) {
+                context.delete(reply)
+            }
             return result.handoffs
         } catch {
             guard alive(reply) else { return [] }
@@ -224,6 +229,7 @@ final class AgentEngine {
         let tools = toolDefinitions(for: agent, conversation: conversation, depth: depth)
         var sources = sink.sources
         var modelSwaps = 0
+        var keySwaps = 0
 
         for _ in 0..<maxToolRounds {
             try Task.checkCancellation()
@@ -284,6 +290,19 @@ final class AgentEngine {
                     }
                 }
                 }
+            } catch let error as KeyRejectedError {
+                // This provider's key doesn't work: carry on with another provider the user has set up.
+                guard keySwaps < 1, sink.text.isEmpty,
+                      let other = Provider.configured.first(where: {
+                          $0 != error.provider && ProviderSettings.hasConsent($0)
+                      }) else { throw error }
+                keySwaps += 1
+                ProviderSettings.setPreferred(other)
+                agent.provider = other.rawValue
+                agent.model = ""
+                await ProviderRouting.repair(agent)
+                save()
+                continue
             } catch let error as ModelUnavailableError {
                 // The provider retired or doesn't offer this model: switch to another and try again.
                 guard modelSwaps < 2, sink.text.isEmpty, await ProviderRouting.replaceModel(of: agent) else { throw error }

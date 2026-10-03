@@ -140,7 +140,10 @@ enum ProviderSettings {
 
     /// App Store guideline 5.1.2(i): the user must agree before personal data goes to a third-party AI.
     static func hasConsent(_ provider: Provider) -> Bool {
-        UserDefaults.standard.bool(forKey: key("consent", provider))
+        #if DEBUG
+        if SelfTest.assumeConsent { return true }
+        #endif
+        return UserDefaults.standard.bool(forKey: key("consent", provider))
             || NSUbiquitousKeyValueStore.default.bool(forKey: key("consent", provider))
     }
 
@@ -222,6 +225,13 @@ struct ModelUnavailableError: LocalizedError {
     }
 }
 
+/// The provider refused the API key (wrong, revoked or expired).
+struct KeyRejectedError: LocalizedError {
+    let provider: Provider
+    let message: String
+    var errorDescription: String? { message }
+}
+
 /// Sends each request to the right provider for the agent that is speaking.
 /// Keys are read once per turn, so an agent on a provider without a key fails with a clear message.
 struct ClientPool {
@@ -237,11 +247,16 @@ struct ClientPool {
             switch provider {
             case .anthropic:
                 return try await ClaudeClient(apiKey: key).stream(body: body, betas: betas, onEvent: onEvent)
+            case .openai:
+                // GPT-6 and later only take tools on the Responses API.
+                return try await OpenAIResponsesClient(apiKey: key).stream(body: body, onEvent: onEvent)
             default:
                 return try await OpenAICompatClient(provider: provider, apiKey: key).stream(body: body, onEvent: onEvent)
             }
         } catch let error as ClaudeError where ModelUnavailableError.matches(error.message) {
             throw ModelUnavailableError(message: error.message)
+        } catch let error as ClaudeError where error.message.contains("API key was rejected") {
+            throw KeyRejectedError(provider: provider, message: error.message)
         }
     }
 }

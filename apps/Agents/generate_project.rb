@@ -37,7 +37,7 @@ target.build_configurations.each do |config|
   s['PRODUCT_NAME'] = 'Agents'
   s['PRODUCT_BUNDLE_IDENTIFIER'] = 'com.keoly.agents'
   s['MARKETING_VERSION'] = '1.0'
-  s['CURRENT_PROJECT_VERSION'] = '1'
+  s['CURRENT_PROJECT_VERSION'] = '2'
   s['SWIFT_VERSION'] = '5.0'
   s['SDKROOT'] = 'auto'
   s['SUPPORTED_PLATFORMS'] = 'iphoneos iphonesimulator macosx'

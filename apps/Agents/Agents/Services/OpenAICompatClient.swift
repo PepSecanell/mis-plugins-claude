@@ -184,7 +184,7 @@ struct OpenAICompatClient {
 
     // MARK: - Transport
 
-    private func openStream(_ request: URLRequest) async throws -> URLSession.AsyncBytes {
+    func openStream(_ request: URLRequest) async throws -> URLSession.AsyncBytes {
         var attempt = 0
         while true {
             let (bytes, response) = try await URLSession.shared.bytes(for: request)
