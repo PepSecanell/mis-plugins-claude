@@ -97,7 +97,7 @@ struct HomeView: View {
                 Text("Agents")
             }
 
-            Section("Chats") {
+            Section {
                 if sortedConversations.isEmpty {
                     Text("Tap an agent above to start chatting.")
                         .foregroundStyle(.secondary)
@@ -121,6 +121,10 @@ struct HomeView: View {
                         Button("Delete", systemImage: "trash", role: .destructive) { delete(conversation) }
                     }
                 }
+            } header: {
+                Text("Chats")
+            } footer: {
+                SyncStatusLine().padding(.top, 6)
             }
         }
         .navigationTitle("Agent Teams")

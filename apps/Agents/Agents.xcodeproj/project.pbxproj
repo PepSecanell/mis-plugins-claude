@@ -7,63 +7,73 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00C9E1967DC78AE0EA53D06C /* ClaudeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 290C8FA5627927894D6D5862 /* ClaudeClient.swift */; };
-		066A8F74A008088EB9769813 /* Providers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105ACF79EBD8AF7CCC0144CB /* Providers.swift */; };
-		0898B91D4BE9D20EEB471426 /* SelfTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64DCDA18807C1032D7950CD /* SelfTest.swift */; };
-		108770542CE878EE95CB969A /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55989B88A9D706893656C76A /* ChatMessage.swift */; };
-		1DFEAFF35333F69FE16AD46E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A67548CF07A469F81377CE /* SettingsView.swift */; };
-		4A010150B8243CB297484B07 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6904DFB0D79EDAEBD42C41F /* Conversation.swift */; };
-		52737EA46467E26A4801F68B /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4DC8D8787F0F39C9D08F1E /* MemoryItem.swift */; };
-		56754729E73D66650F9180DB /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223F5095260C7ECB40712BBD /* SeedData.swift */; };
-		6A71B17DF865FF86E0CB11E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CF2FEA9E49D5A9824C81EE24 /* Assets.xcassets */; };
-		7429C1441BFECB64482CC5C0 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8065A4612624CE66FF1585 /* Keychain.swift */; };
-		854E5426BE11F304D18F81E1 /* DemoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B98660D273A23F62783AD87B /* DemoContent.swift */; };
-		9803F454052EDA95CC5652FF /* AgentEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9CF4817A1851F8AFC8A90 /* AgentEngine.swift */; };
-		A0BBF80ECD0FB5FFEE5F4F93 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9153608945408CB72F2E3B /* RootView.swift */; };
-		AB0DD7F58D729D841CD74707 /* AgentEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15382AC7604C0C60936E7F6C /* AgentEditorView.swift */; };
-		B88CD3EAA4844B31F57C31A3 /* GroupViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1CFB93EA47767CEF19F5A85 /* GroupViews.swift */; };
-		C95CBD9A8236C61B81F99CDA /* TeamTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = B106F2583BD0F39A04066FE1 /* TeamTools.swift */; };
-		C9EC8135DDA2439D4953A7ED /* AgentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D27FCBB89380A01485A54F /* AgentsApp.swift */; };
-		CBD9F93124F2665753BE9DE4 /* OpenAICompatClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410FA75CFF0316DBD46D717B /* OpenAICompatClient.swift */; };
-		D8450E7963EF540ED53FA2E4 /* OpenAIResponsesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BEDE83E98B85561F5454E56 /* OpenAIResponsesClient.swift */; };
-		D8D4D3379935DBFD2C9F9AC1 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9023C0B7C336F7798050FA79 /* Components.swift */; };
-		E63D83424023D02B047C1DBA /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C7EBA1E100286646411883 /* ChatView.swift */; };
-		E9AB5D37438F9A1C5851A39C /* ModelCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E060598F45FB91DE65C85220 /* ModelCatalog.swift */; };
-		FAC58123FBA0359FABDA1CDC /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AF96A06E3E2DF7FB24A120 /* Agent.swift */; };
+		0979036CBF9C55E42369F96E /* SyncViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98EB261BB7D52C167E73D6E /* SyncViews.swift */; };
+		0A8AAD36BEEEAAD0FB8F46D6 /* AgentsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0F6A1AE87E8E2695DD808A /* AgentsApp.swift */; };
+		11C89017392E43B51890CC4F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB182B23A371B9DF74D085EA /* SettingsView.swift */; };
+		14B9D6F9C85CA58FA1B18FA9 /* Providers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 819DC7A47E5392A5B83E6D85 /* Providers.swift */; };
+		21A320CF59AA0029C503C6BA /* OpenAIResponsesClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D4437932D540A0394C300 /* OpenAIResponsesClient.swift */; };
+		3C6E7EB992BE89FD7E353FCD /* ModelCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB7DB3B95BE2280D8D2AE9A1 /* ModelCatalog.swift */; };
+		5955016DBA611C2A676974A1 /* SeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779E42E66F2312EDF9E26791 /* SeedData.swift */; };
+		5E80C9650BCE03801E831E86 /* SyncCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DD9304D39E0F818A0F515F /* SyncCenter.swift */; };
+		6FD4F1A622377087C2951340 /* GroupViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FA28DD6695CF110B5E22FD4 /* GroupViews.swift */; };
+		787E0B8ABDFC55A005436F6F /* Agent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC39A76A72B43369F7BD8EE8 /* Agent.swift */; };
+		78CD9A57DE076D86AE1FD38E /* ScheduledTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EB793BC6879114A347A9486 /* ScheduledTask.swift */; };
+		8F5CF8064A0C851263AF0C2E /* MemoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA35642C06A68F5930CE6CB3 /* MemoryItem.swift */; };
+		95D3A1BF0290CB2B04530E4B /* TeamTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FAFA9EAE6C7CFB1B6D30C2 /* TeamTools.swift */; };
+		975172799CFED477BFBDE0D9 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDD51C1F3D9DED77B04F2E4 /* Conversation.swift */; };
+		9831B7CA8494CC4EA57D51A7 /* DeviceRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2DD7CC9D4C7170271D5DE6 /* DeviceRecord.swift */; };
+		9DAD35413F2B1AFFA8FC4931 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E448244F909491227C0361 /* ChatMessage.swift */; };
+		A172844F1F8F94F6451AE593 /* OpenAICompatClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F077DC3952B422B0484DF6 /* OpenAICompatClient.swift */; };
+		B341308921AB18589B8D3723 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CBF83D58F4ED7BF3C2C43505 /* Assets.xcassets */; };
+		B74E9D19C8B001F06E129E61 /* AgentEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1350E7012850E4E3730AA185 /* AgentEditorView.swift */; };
+		BA04491E29A89EBF4865EC79 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFF9A0CB30CC3F55F838C5E /* Components.swift */; };
+		BD24BDE7A460FD47FA8FF332 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = E58224EF5F9A5FA12861B985 /* Keychain.swift */; };
+		D10225A5892DD9541B792FC1 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA31A6E9498CDD30B71BD804 /* ChatView.swift */; };
+		D50854B6B7DCD17701ABCA51 /* AgentEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19974802905688F0D6D2946 /* AgentEngine.swift */; };
+		E3C2FCD1E42376C8571AABC8 /* DemoContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF570CB42700D00DB5F3F51D /* DemoContent.swift */; };
+		E605125A281B03AA908D691E /* ClaudeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE0B418A40DD3423D3EC13BB /* ClaudeClient.swift */; };
+		E6D8925FA0B775539AD133B3 /* ScheduleTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35952C48A00B28F65D45C801 /* ScheduleTools.swift */; };
+		E8EF28FCB6E12D4F9459B1B0 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD1A8EA050830338411F5C7 /* RootView.swift */; };
+		ED7B76436D8803F826A553A7 /* SelfTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1F65B643822FDEEFD685FE /* SelfTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		105ACF79EBD8AF7CCC0144CB /* Providers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Providers.swift; path = Services/Providers.swift; sourceTree = "<group>"; };
-		15382AC7604C0C60936E7F6C /* AgentEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgentEditorView.swift; path = Views/AgentEditorView.swift; sourceTree = "<group>"; };
-		223F5095260C7ECB40712BBD /* SeedData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SeedData.swift; path = Services/SeedData.swift; sourceTree = "<group>"; };
-		22AF96A06E3E2DF7FB24A120 /* Agent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Agent.swift; path = Models/Agent.swift; sourceTree = "<group>"; };
-		27C7EBA1E100286646411883 /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatView.swift; path = Views/ChatView.swift; sourceTree = "<group>"; };
-		290C8FA5627927894D6D5862 /* ClaudeClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClaudeClient.swift; path = Services/ClaudeClient.swift; sourceTree = "<group>"; };
-		2B9153608945408CB72F2E3B /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = Views/RootView.swift; sourceTree = "<group>"; };
-		3BEDE83E98B85561F5454E56 /* OpenAIResponsesClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpenAIResponsesClient.swift; path = Services/OpenAIResponsesClient.swift; sourceTree = "<group>"; };
-		410FA75CFF0316DBD46D717B /* OpenAICompatClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpenAICompatClient.swift; path = Services/OpenAICompatClient.swift; sourceTree = "<group>"; };
-		43D27FCBB89380A01485A54F /* AgentsApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgentsApp.swift; sourceTree = "<group>"; };
-		52A67548CF07A469F81377CE /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = Views/SettingsView.swift; sourceTree = "<group>"; };
-		55989B88A9D706893656C76A /* ChatMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatMessage.swift; path = Models/ChatMessage.swift; sourceTree = "<group>"; };
-		60A1A682DF6D5F898F536521 /* Agents-iOS.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "Agents-iOS.entitlements"; sourceTree = "<group>"; };
-		80F9CF4817A1851F8AFC8A90 /* AgentEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgentEngine.swift; path = Services/AgentEngine.swift; sourceTree = "<group>"; };
-		9023C0B7C336F7798050FA79 /* Components.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Components.swift; path = Views/Components.swift; sourceTree = "<group>"; };
-		A1CFB93EA47767CEF19F5A85 /* GroupViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupViews.swift; path = Views/GroupViews.swift; sourceTree = "<group>"; };
-		A6904DFB0D79EDAEBD42C41F /* Conversation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Models/Conversation.swift; sourceTree = "<group>"; };
-		AB4AB174582F68715C34FF76 /* Agents-macOS.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "Agents-macOS.entitlements"; sourceTree = "<group>"; };
-		B106F2583BD0F39A04066FE1 /* TeamTools.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TeamTools.swift; path = Services/TeamTools.swift; sourceTree = "<group>"; };
-		B98660D273A23F62783AD87B /* DemoContent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoContent.swift; path = Services/DemoContent.swift; sourceTree = "<group>"; };
-		BC4DC8D8787F0F39C9D08F1E /* MemoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemoryItem.swift; path = Models/MemoryItem.swift; sourceTree = "<group>"; };
-		BDFE21FA692F5D78281D3042 /* Agents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Agents.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CF2FEA9E49D5A9824C81EE24 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E060598F45FB91DE65C85220 /* ModelCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModelCatalog.swift; path = Services/ModelCatalog.swift; sourceTree = "<group>"; };
-		F0EC7BDC42202B526ACA2CCE /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F64DCDA18807C1032D7950CD /* SelfTest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SelfTest.swift; path = Services/SelfTest.swift; sourceTree = "<group>"; };
-		FF8065A4612624CE66FF1585 /* Keychain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Keychain.swift; path = Services/Keychain.swift; sourceTree = "<group>"; };
+		0533AE83CA202E6DF6DD22E8 /* Agents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Agents.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1350E7012850E4E3730AA185 /* AgentEditorView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgentEditorView.swift; path = Views/AgentEditorView.swift; sourceTree = "<group>"; };
+		1B1F65B643822FDEEFD685FE /* SelfTest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SelfTest.swift; path = Services/SelfTest.swift; sourceTree = "<group>"; };
+		2FA28DD6695CF110B5E22FD4 /* GroupViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupViews.swift; path = Views/GroupViews.swift; sourceTree = "<group>"; };
+		35952C48A00B28F65D45C801 /* ScheduleTools.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScheduleTools.swift; path = Services/ScheduleTools.swift; sourceTree = "<group>"; };
+		3E0F6A1AE87E8E2695DD808A /* AgentsApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgentsApp.swift; sourceTree = "<group>"; };
+		3EDD51C1F3D9DED77B04F2E4 /* Conversation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Conversation.swift; path = Models/Conversation.swift; sourceTree = "<group>"; };
+		6EB793BC6879114A347A9486 /* ScheduledTask.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScheduledTask.swift; path = Models/ScheduledTask.swift; sourceTree = "<group>"; };
+		6F9A7C939BD8CBF5F4CBE22F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		779E42E66F2312EDF9E26791 /* SeedData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SeedData.swift; path = Services/SeedData.swift; sourceTree = "<group>"; };
+		819DC7A47E5392A5B83E6D85 /* Providers.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Providers.swift; path = Services/Providers.swift; sourceTree = "<group>"; };
+		88FAFA9EAE6C7CFB1B6D30C2 /* TeamTools.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TeamTools.swift; path = Services/TeamTools.swift; sourceTree = "<group>"; };
+		90DD9304D39E0F818A0F515F /* SyncCenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyncCenter.swift; path = Services/SyncCenter.swift; sourceTree = "<group>"; };
+		AA35642C06A68F5930CE6CB3 /* MemoryItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MemoryItem.swift; path = Models/MemoryItem.swift; sourceTree = "<group>"; };
+		BD074880FCDE4C1E58BE3ED7 /* Agents-macOS.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "Agents-macOS.entitlements"; sourceTree = "<group>"; };
+		C59D4437932D540A0394C300 /* OpenAIResponsesClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpenAIResponsesClient.swift; path = Services/OpenAIResponsesClient.swift; sourceTree = "<group>"; };
+		C5E448244F909491227C0361 /* ChatMessage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatMessage.swift; path = Models/ChatMessage.swift; sourceTree = "<group>"; };
+		CBF83D58F4ED7BF3C2C43505 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CC2DD7CC9D4C7170271D5DE6 /* DeviceRecord.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DeviceRecord.swift; path = Models/DeviceRecord.swift; sourceTree = "<group>"; };
+		CC39A76A72B43369F7BD8EE8 /* Agent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Agent.swift; path = Models/Agent.swift; sourceTree = "<group>"; };
+		D0E2DE212327459F4E5ED37E /* Agents-iOS.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = "Agents-iOS.entitlements"; sourceTree = "<group>"; };
+		D5F077DC3952B422B0484DF6 /* OpenAICompatClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpenAICompatClient.swift; path = Services/OpenAICompatClient.swift; sourceTree = "<group>"; };
+		DA31A6E9498CDD30B71BD804 /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatView.swift; path = Views/ChatView.swift; sourceTree = "<group>"; };
+		DE0B418A40DD3423D3EC13BB /* ClaudeClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClaudeClient.swift; path = Services/ClaudeClient.swift; sourceTree = "<group>"; };
+		E58224EF5F9A5FA12861B985 /* Keychain.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Keychain.swift; path = Services/Keychain.swift; sourceTree = "<group>"; };
+		E98EB261BB7D52C167E73D6E /* SyncViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SyncViews.swift; path = Views/SyncViews.swift; sourceTree = "<group>"; };
+		EB7DB3B95BE2280D8D2AE9A1 /* ModelCatalog.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModelCatalog.swift; path = Services/ModelCatalog.swift; sourceTree = "<group>"; };
+		EBD1A8EA050830338411F5C7 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RootView.swift; path = Views/RootView.swift; sourceTree = "<group>"; };
+		ECFF9A0CB30CC3F55F838C5E /* Components.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Components.swift; path = Views/Components.swift; sourceTree = "<group>"; };
+		F19974802905688F0D6D2946 /* AgentEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AgentEngine.swift; path = Services/AgentEngine.swift; sourceTree = "<group>"; };
+		FB182B23A371B9DF74D085EA /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = Views/SettingsView.swift; sourceTree = "<group>"; };
+		FF570CB42700D00DB5F3F51D /* DemoContent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoContent.swift; path = Services/DemoContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AF7A09B98EF78324F6A37E3A /* Frameworks */ = {
+		C7D88EBFC4DD478EE1A1D7EE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -73,82 +83,87 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		36EECBF478209722845804A4 /* Agents */ = {
+		15CD3AF802588D8B7ABF4A8F /* Agents */ = {
 			isa = PBXGroup;
 			children = (
-				43D27FCBB89380A01485A54F /* AgentsApp.swift */,
-				22AF96A06E3E2DF7FB24A120 /* Agent.swift */,
-				55989B88A9D706893656C76A /* ChatMessage.swift */,
-				A6904DFB0D79EDAEBD42C41F /* Conversation.swift */,
-				BC4DC8D8787F0F39C9D08F1E /* MemoryItem.swift */,
-				80F9CF4817A1851F8AFC8A90 /* AgentEngine.swift */,
-				290C8FA5627927894D6D5862 /* ClaudeClient.swift */,
-				B98660D273A23F62783AD87B /* DemoContent.swift */,
-				FF8065A4612624CE66FF1585 /* Keychain.swift */,
-				E060598F45FB91DE65C85220 /* ModelCatalog.swift */,
-				410FA75CFF0316DBD46D717B /* OpenAICompatClient.swift */,
-				3BEDE83E98B85561F5454E56 /* OpenAIResponsesClient.swift */,
-				105ACF79EBD8AF7CCC0144CB /* Providers.swift */,
-				223F5095260C7ECB40712BBD /* SeedData.swift */,
-				F64DCDA18807C1032D7950CD /* SelfTest.swift */,
-				B106F2583BD0F39A04066FE1 /* TeamTools.swift */,
-				15382AC7604C0C60936E7F6C /* AgentEditorView.swift */,
-				27C7EBA1E100286646411883 /* ChatView.swift */,
-				9023C0B7C336F7798050FA79 /* Components.swift */,
-				A1CFB93EA47767CEF19F5A85 /* GroupViews.swift */,
-				2B9153608945408CB72F2E3B /* RootView.swift */,
-				52A67548CF07A469F81377CE /* SettingsView.swift */,
-				CF2FEA9E49D5A9824C81EE24 /* Assets.xcassets */,
-				F0EC7BDC42202B526ACA2CCE /* Info.plist */,
-				60A1A682DF6D5F898F536521 /* Agents-iOS.entitlements */,
-				AB4AB174582F68715C34FF76 /* Agents-macOS.entitlements */,
+				3E0F6A1AE87E8E2695DD808A /* AgentsApp.swift */,
+				CC39A76A72B43369F7BD8EE8 /* Agent.swift */,
+				C5E448244F909491227C0361 /* ChatMessage.swift */,
+				3EDD51C1F3D9DED77B04F2E4 /* Conversation.swift */,
+				CC2DD7CC9D4C7170271D5DE6 /* DeviceRecord.swift */,
+				AA35642C06A68F5930CE6CB3 /* MemoryItem.swift */,
+				6EB793BC6879114A347A9486 /* ScheduledTask.swift */,
+				F19974802905688F0D6D2946 /* AgentEngine.swift */,
+				DE0B418A40DD3423D3EC13BB /* ClaudeClient.swift */,
+				FF570CB42700D00DB5F3F51D /* DemoContent.swift */,
+				E58224EF5F9A5FA12861B985 /* Keychain.swift */,
+				EB7DB3B95BE2280D8D2AE9A1 /* ModelCatalog.swift */,
+				D5F077DC3952B422B0484DF6 /* OpenAICompatClient.swift */,
+				C59D4437932D540A0394C300 /* OpenAIResponsesClient.swift */,
+				819DC7A47E5392A5B83E6D85 /* Providers.swift */,
+				35952C48A00B28F65D45C801 /* ScheduleTools.swift */,
+				779E42E66F2312EDF9E26791 /* SeedData.swift */,
+				1B1F65B643822FDEEFD685FE /* SelfTest.swift */,
+				90DD9304D39E0F818A0F515F /* SyncCenter.swift */,
+				88FAFA9EAE6C7CFB1B6D30C2 /* TeamTools.swift */,
+				1350E7012850E4E3730AA185 /* AgentEditorView.swift */,
+				DA31A6E9498CDD30B71BD804 /* ChatView.swift */,
+				ECFF9A0CB30CC3F55F838C5E /* Components.swift */,
+				2FA28DD6695CF110B5E22FD4 /* GroupViews.swift */,
+				EBD1A8EA050830338411F5C7 /* RootView.swift */,
+				FB182B23A371B9DF74D085EA /* SettingsView.swift */,
+				E98EB261BB7D52C167E73D6E /* SyncViews.swift */,
+				CBF83D58F4ED7BF3C2C43505 /* Assets.xcassets */,
+				6F9A7C939BD8CBF5F4CBE22F /* Info.plist */,
+				D0E2DE212327459F4E5ED37E /* Agents-iOS.entitlements */,
+				BD074880FCDE4C1E58BE3ED7 /* Agents-macOS.entitlements */,
 			);
 			name = Agents;
 			path = Agents;
 			sourceTree = "<group>";
 		};
-		596A40C74E77AB8F8242BEC3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				BDFE21FA692F5D78281D3042 /* Agents.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		DF97403D1E3E8C7FF68D8708 = {
-			isa = PBXGroup;
-			children = (
-				596A40C74E77AB8F8242BEC3 /* Products */,
-				E3C127C49BA7AFC49BC90AA3 /* Frameworks */,
-				36EECBF478209722845804A4 /* Agents */,
-			);
-			sourceTree = "<group>";
-		};
-		E3C127C49BA7AFC49BC90AA3 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				F80D9E7D9A7F96CD07D38E5A /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F80D9E7D9A7F96CD07D38E5A /* iOS */ = {
+		310308925CFADDD08946D540 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 			);
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		AF5A268D5E92E858C64A365B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				310308925CFADDD08946D540 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ECA8A6F49686A9404B8251BE = {
+			isa = PBXGroup;
+			children = (
+				EF54907D3465472FB0FAD063 /* Products */,
+				AF5A268D5E92E858C64A365B /* Frameworks */,
+				15CD3AF802588D8B7ABF4A8F /* Agents */,
+			);
+			sourceTree = "<group>";
+		};
+		EF54907D3465472FB0FAD063 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0533AE83CA202E6DF6DD22E8 /* Agents.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EB68C6BAEC3F0CFF573AB9B5 /* Agents */ = {
+		12C74EB44F7510E489C08E41 /* Agents */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4023335A92B9FD2095837751 /* Build configuration list for PBXNativeTarget "Agents" */;
+			buildConfigurationList = 0B294BC5A1B743CE151E5B15 /* Build configuration list for PBXNativeTarget "Agents" */;
 			buildPhases = (
-				6BE502FA918F1036CFCB0427 /* Sources */,
-				AF7A09B98EF78324F6A37E3A /* Frameworks */,
-				D5C76121158B638DE0BBBC6A /* Resources */,
+				B6AB13E86123C36FD4EC7AFA /* Sources */,
+				C7D88EBFC4DD478EE1A1D7EE /* Frameworks */,
+				977A389C927B55947D35BFAF /* Resources */,
 			);
 			buildRules = (
 			);
@@ -156,24 +171,24 @@
 			);
 			name = Agents;
 			productName = Agents;
-			productReference = BDFE21FA692F5D78281D3042 /* Agents.app */;
+			productReference = 0533AE83CA202E6DF6DD22E8 /* Agents.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		916F11BEC7709DC80667C0B4 /* Project object */ = {
+		E76BB8364821EF041D81A17B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
-					EB68C6BAEC3F0CFF573AB9B5 = {
+					12C74EB44F7510E489C08E41 = {
 						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
-			buildConfigurationList = CF71500E669806B9FD1BDFB7 /* Build configuration list for PBXProject "Agents" */;
+			buildConfigurationList = C003CF88470C124EF3CB5347 /* Build configuration list for PBXProject "Agents" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -181,63 +196,108 @@
 				en,
 				Base,
 			);
-			mainGroup = DF97403D1E3E8C7FF68D8708;
+			mainGroup = ECA8A6F49686A9404B8251BE;
 			minimizedProjectReferenceProxies = 0;
 			preferredProjectObjectVersion = 100;
-			productRefGroup = 596A40C74E77AB8F8242BEC3 /* Products */;
+			productRefGroup = EF54907D3465472FB0FAD063 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EB68C6BAEC3F0CFF573AB9B5 /* Agents */,
+				12C74EB44F7510E489C08E41 /* Agents */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		D5C76121158B638DE0BBBC6A /* Resources */ = {
+		977A389C927B55947D35BFAF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6A71B17DF865FF86E0CB11E9 /* Assets.xcassets in Resources */,
+				B341308921AB18589B8D3723 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		6BE502FA918F1036CFCB0427 /* Sources */ = {
+		B6AB13E86123C36FD4EC7AFA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C9EC8135DDA2439D4953A7ED /* AgentsApp.swift in Sources */,
-				FAC58123FBA0359FABDA1CDC /* Agent.swift in Sources */,
-				108770542CE878EE95CB969A /* ChatMessage.swift in Sources */,
-				4A010150B8243CB297484B07 /* Conversation.swift in Sources */,
-				52737EA46467E26A4801F68B /* MemoryItem.swift in Sources */,
-				9803F454052EDA95CC5652FF /* AgentEngine.swift in Sources */,
-				00C9E1967DC78AE0EA53D06C /* ClaudeClient.swift in Sources */,
-				854E5426BE11F304D18F81E1 /* DemoContent.swift in Sources */,
-				7429C1441BFECB64482CC5C0 /* Keychain.swift in Sources */,
-				E9AB5D37438F9A1C5851A39C /* ModelCatalog.swift in Sources */,
-				CBD9F93124F2665753BE9DE4 /* OpenAICompatClient.swift in Sources */,
-				D8450E7963EF540ED53FA2E4 /* OpenAIResponsesClient.swift in Sources */,
-				066A8F74A008088EB9769813 /* Providers.swift in Sources */,
-				56754729E73D66650F9180DB /* SeedData.swift in Sources */,
-				0898B91D4BE9D20EEB471426 /* SelfTest.swift in Sources */,
-				C95CBD9A8236C61B81F99CDA /* TeamTools.swift in Sources */,
-				AB0DD7F58D729D841CD74707 /* AgentEditorView.swift in Sources */,
-				E63D83424023D02B047C1DBA /* ChatView.swift in Sources */,
-				D8D4D3379935DBFD2C9F9AC1 /* Components.swift in Sources */,
-				B88CD3EAA4844B31F57C31A3 /* GroupViews.swift in Sources */,
-				A0BBF80ECD0FB5FFEE5F4F93 /* RootView.swift in Sources */,
-				1DFEAFF35333F69FE16AD46E /* SettingsView.swift in Sources */,
+				0A8AAD36BEEEAAD0FB8F46D6 /* AgentsApp.swift in Sources */,
+				787E0B8ABDFC55A005436F6F /* Agent.swift in Sources */,
+				9DAD35413F2B1AFFA8FC4931 /* ChatMessage.swift in Sources */,
+				975172799CFED477BFBDE0D9 /* Conversation.swift in Sources */,
+				9831B7CA8494CC4EA57D51A7 /* DeviceRecord.swift in Sources */,
+				8F5CF8064A0C851263AF0C2E /* MemoryItem.swift in Sources */,
+				78CD9A57DE076D86AE1FD38E /* ScheduledTask.swift in Sources */,
+				D50854B6B7DCD17701ABCA51 /* AgentEngine.swift in Sources */,
+				E605125A281B03AA908D691E /* ClaudeClient.swift in Sources */,
+				E3C2FCD1E42376C8571AABC8 /* DemoContent.swift in Sources */,
+				BD24BDE7A460FD47FA8FF332 /* Keychain.swift in Sources */,
+				3C6E7EB992BE89FD7E353FCD /* ModelCatalog.swift in Sources */,
+				A172844F1F8F94F6451AE593 /* OpenAICompatClient.swift in Sources */,
+				21A320CF59AA0029C503C6BA /* OpenAIResponsesClient.swift in Sources */,
+				14B9D6F9C85CA58FA1B18FA9 /* Providers.swift in Sources */,
+				E6D8925FA0B775539AD133B3 /* ScheduleTools.swift in Sources */,
+				5955016DBA611C2A676974A1 /* SeedData.swift in Sources */,
+				ED7B76436D8803F826A553A7 /* SelfTest.swift in Sources */,
+				5E80C9650BCE03801E831E86 /* SyncCenter.swift in Sources */,
+				95D3A1BF0290CB2B04530E4B /* TeamTools.swift in Sources */,
+				B74E9D19C8B001F06E129E61 /* AgentEditorView.swift in Sources */,
+				D10225A5892DD9541B792FC1 /* ChatView.swift in Sources */,
+				BA04491E29A89EBF4865EC79 /* Components.swift in Sources */,
+				6FD4F1A622377087C2951340 /* GroupViews.swift in Sources */,
+				E8EF28FCB6E12D4F9459B1B0 /* RootView.swift in Sources */,
+				11C89017392E43B51890CC4F /* SettingsView.swift in Sources */,
+				0979036CBF9C55E42369F96E /* SyncViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		0A159FF8DFD696D52AB84619 /* Debug */ = {
+		15553AF135714F6F45640065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Agents/Agents-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Agents/Agents-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Agents/Agents-macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KTZ966L7U;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Agents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Agent Teams";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphone*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]" = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphone*]" = "$(inherited) @executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keoly.agents;
+				PRODUCT_NAME = Agents;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4AA262BA496F16A2320B5766 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -300,86 +360,7 @@
 			};
 			name = Debug;
 		};
-		D5CBC9F9CF96CB94DEEA649E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Agents/Agents-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Agents/Agents-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Agents/Agents-macOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 2KTZ966L7U;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Agents/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Agent Teams";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphone*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]" = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphone*]" = "$(inherited) @executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.keoly.agents;
-				PRODUCT_NAME = Agents;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		DC0DE5C55341F3945A7624C0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Agents/Agents-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Agents/Agents-iOS.entitlements";
-				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Agents/Agents-macOS.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 2KTZ966L7U;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Agents/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Agent Teams";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphone*]" = YES;
-				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]" = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				"LD_RUNPATH_SEARCH_PATHS[sdk=iphone*]" = "$(inherited) @executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.keoly.agents;
-				PRODUCT_NAME = Agents;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SUPPORTS_MACCATALYST = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		E7DDBF30D0DB12EC706FB38B /* Release */ = {
+		AC6A8B3A1E8291F55B018CE4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -435,28 +416,67 @@
 			};
 			name = Release;
 		};
+		C3D4DE7AD166A4BB1F69ABBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphoneos*]" = "Agents/Agents-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "Agents/Agents-iOS.entitlements";
+				"CODE_SIGN_ENTITLEMENTS[sdk=macosx*]" = "Agents/Agents-macOS.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 2KTZ966L7U;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Agents/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Agent Teams";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphone*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphone*]" = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				"LD_RUNPATH_SEARCH_PATHS[sdk=iphone*]" = "$(inherited) @executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.keoly.agents;
+				PRODUCT_NAME = Agents;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4023335A92B9FD2095837751 /* Build configuration list for PBXNativeTarget "Agents" */ = {
+		0B294BC5A1B743CE151E5B15 /* Build configuration list for PBXNativeTarget "Agents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DC0DE5C55341F3945A7624C0 /* Release */,
-				D5CBC9F9CF96CB94DEEA649E /* Debug */,
+				15553AF135714F6F45640065 /* Release */,
+				C3D4DE7AD166A4BB1F69ABBA /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CF71500E669806B9FD1BDFB7 /* Build configuration list for PBXProject "Agents" */ = {
+		C003CF88470C124EF3CB5347 /* Build configuration list for PBXProject "Agents" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				0A159FF8DFD696D52AB84619 /* Debug */,
-				E7DDBF30D0DB12EC706FB38B /* Release */,
+				4AA262BA496F16A2320B5766 /* Debug */,
+				AC6A8B3A1E8291F55B018CE4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 916F11BEC7709DC80667C0B4 /* Project object */;
+	rootObject = E76BB8364821EF041D81A17B /* Project object */;
 }

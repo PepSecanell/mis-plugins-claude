@@ -15,6 +15,10 @@ final class AgentEngine {
     private(set) var status: [UUID: String] = [:]
 
     let context: ModelContext
+    /// Set by the app: lets tools refresh scheduled-task notifications.
+    @ObservationIgnored weak var sync: SyncCenter?
+    /// Last save while a reply was streaming; saving every few seconds lets the user's other devices see it grow.
+    @ObservationIgnored private var lastStreamSave = Date.distantPast
     @ObservationIgnored private var tasks: [UUID: Task<Void, Never>] = [:]
 
     /// How deep agents may consult each other (main → specialist → specialist).
@@ -266,6 +270,10 @@ final class AgentEngine {
                 case .text(let chunk):
                     sink.text += chunk
                     self.status[sinkID] = ""
+                    if Date().timeIntervalSince(self.lastStreamSave) > 2 {
+                        self.lastStreamSave = Date()
+                        self.save()
+                    }
                 case .thinking(let chunk):
                     sink.thinking += chunk
                 case .blockStarted(let type, let name):
@@ -279,6 +287,8 @@ final class AgentEngine {
                         case "ask_agent": self.status[sinkID] = "Consulting teammates…"
                         case "remember", "forget": self.status[sinkID] = "Updating memory…"
                         case "hand_off": self.status[sinkID] = "Handing off…"
+                        case "create_scheduled_task", "update_scheduled_task", "delete_scheduled_task", "list_scheduled_tasks":
+                            self.status[sinkID] = "Scheduling…"
                         case "create_agent", "update_agent", "delete_agent", "create_group_chat", "update_group_chat":
                             self.status[sinkID] = "Setting up your team…"
                         default: self.status[sinkID] = "Working…"
@@ -408,6 +418,9 @@ final class AgentEngine {
         if agent.isMain && depth == 0 {
             tools.append(contentsOf: TeamTools.definitions)
         }
+        if depth == 0 {
+            tools.append(contentsOf: ScheduleTools.definitions)
+        }
         if agent.webSearch && agent.providerKind.supportsWebSearch {
             tools.append(["type": ModelCatalog.webSearchToolType(agent.model), "name": "web_search", "max_uses": 6])
         }
@@ -474,6 +487,7 @@ final class AgentEngine {
                 }
             default:
                 outputs[i] = runTeamTool(name, input: input, agent: agent, conversation: conversation)
+                    ?? runScheduleTool(name, input: input, agent: agent, conversation: conversation)
                     ?? ("Unknown tool \(name).", true)
             }
         }
@@ -558,7 +572,8 @@ final class AgentEngine {
             You can't see or change API keys; those live in Settings.
             """
         }
-        howYouWork += "\nToday is \(Date.now.formatted(date: .complete, time: .omitted))."
+        howYouWork += "\nIt is \(Date.now.formatted(date: .complete, time: .shortened)) (\(TimeZone.current.identifier))."
+        howYouWork += " You can schedule work you'll do on your own later or repeatedly (create_scheduled_task): a morning plan, a weekly check-in, a reminder. Scheduled runs arrive as a message starting with ⏰; then just do the task."
         parts.append(howYouWork)
 
         let teammates = allAgents().filter { $0.id != agent.id }

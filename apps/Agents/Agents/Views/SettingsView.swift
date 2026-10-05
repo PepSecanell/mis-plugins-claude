@@ -12,6 +12,18 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
+                DevicesSection()
+
+                Section {
+                    NavigationLink {
+                        ScheduledTasksView()
+                    } label: {
+                        Label("Scheduled tasks", systemImage: "alarm")
+                    }
+                } footer: {
+                    Text("Things your agents do on their own at set times. Ask any agent to schedule one.")
+                }
+
                 Section {
                     ForEach(Provider.allCases) { provider in
                         NavigationLink {

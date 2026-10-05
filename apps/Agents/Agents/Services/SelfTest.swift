@@ -68,6 +68,45 @@ enum SelfTest {
             log("renamed: \(engine.allAgents().contains { $0.name == "Fuel" })")
         }
 
+        // Scheduled tasks: an agent creates one through the chat, it comes due, the runner posts the result.
+        if let provider = configured.first {
+            log("")
+            log("=== Scheduled tasks (\(provider.name))")
+            try? context.delete(model: ChatMessage.self)
+            try? context.delete(model: Conversation.self)
+            try? context.delete(model: Agent.self)
+            try? context.delete(model: ScheduledTask.self)
+            let chief = SeedData.mainAgent()
+            chief.provider = provider.rawValue
+            chief.model = ProviderSettings.defaultModel(for: provider)
+            context.insert(chief)
+            let chat = Conversation(title: "Chief", isGroup: false, memberIDs: [chief.id])
+            context.insert(chat)
+            let engine = AgentEngine(context: context)
+            let sync = SyncCenter(context: context)
+            engine.sync = sync
+            await turn(engine, chat, "No questions: schedule a task called Fun fact, every day at 09:15, where you tell me one surprising science fact in one sentence.")
+            failures += check(chat, engine, log)
+            let tasks = (try? context.fetch(FetchDescriptor<ScheduledTask>())) ?? []
+            log("tasks: \(tasks.map { "\($0.title) · \($0.scheduleDescription) · next \($0.nextRunAt.formatted(date: .abbreviated, time: .shortened))" })")
+            if let task = tasks.first {
+                task.nextRunAt = Date().addingTimeInterval(-5)   // pretend it's due now
+                try? context.save()
+                sync.start(engine: engine)
+                sync.runDueTasks()
+                try? await Task.sleep(nanoseconds: 500_000_000)
+                let target = engine.conversation(for: task, agent: chief)
+                while engine.isBusy(target) { try? await Task.sleep(nanoseconds: 300_000_000) }
+                failures += check(target, engine, log, label: "scheduled run")
+                let ranAgain = task.nextRunAt > Date()
+                log("rescheduled for: \(task.nextRunAt.formatted(date: .abbreviated, time: .shortened)) ok=\(ranAgain)")
+                if !ranAgain { failures += 1 }
+            } else {
+                failures += 1
+                log("FAIL: no task created")
+            }
+        }
+
         // An agent set to a provider without a key must move instead of failing.
         if let fallback = ProviderSettings.preferred,
            let missing = Provider.allCases.first(where: { Keychain.key(for: $0) == nil }) {
